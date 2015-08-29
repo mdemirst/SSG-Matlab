@@ -15,6 +15,7 @@ function createSummaryGraphs()
 
 parameters(); %load parameters
 
+continuity_map = [];
 coherency_window = cell(7,coherency_window_lenght);
 
 for frame_id = FIRST_FRAME:LAST_FRAME-1
@@ -48,11 +49,15 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     %P: Permutation matrix, C: Adjacency cost matrix
     [P,C,match_ratio] = findOptimalMatch(N1,E1,N2,E2,S1,S2);
     
+    
     %fills - fixed size queue struct - coherency window 
-    coherency_window = fillCoherencyWindow(frame_id,N1,E1,S1,N2,E2,S2,P,C,match_ratio,coherency_window);
+    [coherency_window,continuity_map] = fillCoherencyWindow(frame_id,N1,E1,S1,N2,E2,S2,P,C,match_ratio,coherency_window,continuity_map);
     
     %draw two segmented region adjacency graph and node-to-node matches
     drawMatches(frame_id,coherency_window,N1,E1,N2,E2,P,C);
 end
 
+imagesc(continuity_map);
+colormap([1 1 1; 0 0 0]);
+        
 save('coherency_window.mat','coherency_window');

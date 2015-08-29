@@ -1,4 +1,4 @@
-function coherency_window = fillCoherencyWindow(frame_id,N1,E1,S1,N2,E2,S2,P,C,match_ratio,coherency_window)
+function [coherency_window,continuity_map] = fillCoherencyWindow(frame_id,N1,E1,S1,N2,E2,S2,P,C,match_ratio,coherency_window,continuity_map)
 %add new frame attributions and matching results to window
 %this window has fixed size queue structure.
 
@@ -65,3 +65,5 @@ else
     new_frame = {N2;E2;S2;P;C;match_ratio;I_current};
     coherency_window = [coherency_window(:,2:coherency_window_lenght) new_frame];
 end
+
+continuity_map(I_current,frame_id) = 1;

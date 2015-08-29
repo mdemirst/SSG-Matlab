@@ -16,7 +16,7 @@ segmentation_app_filename = '"GraphSegmentation"';
 BIG_NUMBER = 9999;
 
 DATASET_NO = 1;
-FIRST_FRAME = 20;LAST_FRAME = 31;
+FIRST_FRAME = 20;LAST_FRAME = 75;
 % FIRST_FRAME = 85;LAST_FRAME = 124;
 % FIRST_FRAME = 175;LAST_FRAME = 205;
 % FIRST_FRAME = 648;LAST_FRAME = 660;
@@ -38,7 +38,7 @@ draw_cf_match_line_width_a = 1.3;
 draw_cf_match_line_width_b = 5;
 tau_m = 0.9; %cost_thres
 
-draw_matches = 1;
+draw_matches = 0;
 save_drawn_matches = 0;
 draw_indv_node_match_cost = 0;
 
