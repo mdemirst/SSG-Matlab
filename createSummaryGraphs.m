@@ -36,12 +36,12 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     %run segmentation algorithm implemented on cpp
     %cpp file produces segment1_graph.txt and segment2_graph.txt
     %on the local directory
-    system([segmentation_app_filename args1]);
-    system([segmentation_app_filename args2]);
+    system([exec_dir segmentation_app_filename args1]);
+    system([exec_dir segmentation_app_filename args2]);
     
     %reads produced txt files and creates node signatures
-    [N1, E1, S1] = readGraphFromFile('segment1_graph.txt');
-    [N2, E2, S2] = readGraphFromFile('segment2_graph.txt');
+    [N1, E1, S1] = readGraphFromFile([working_dir 'segment1_graph.txt']);
+    [N2, E2, S2] = readGraphFromFile([working_dir 'segment2_graph.txt']);
     
     %calculates cost adjacency matrix and find permutation matrix P
     %that defines an optimal match between two graphs
