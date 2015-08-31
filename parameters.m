@@ -7,7 +7,8 @@ global working_dir exec_dir segmentation_app_filename ...
        draw_cf_node_radius draw_cf_match_line_width_a draw_cf_match_line_width_b ...
        tau_m draw_matches save_drawn_matches draw_indv_node_match_cost ...
        coherency_window_lenght ...
-       TAU_S unique_nodes_count;
+       TAU_S unique_nodes_count ...
+       tau_c tau_n COHERENCY_SCORE;
 
 exec_dir = '/home/isl-mahmut-ubuntu/Code/GraphSegmentation/Release/';
 working_dir = '/media/isl-mahmut-ubuntu/YEDEK/REPO/SegmentsSummaryGraphs/';
@@ -16,7 +17,7 @@ segmentation_app_filename = '"GraphSegmentation"';
 BIG_NUMBER = 9999;
 
 DATASET_NO = 1;
-FIRST_FRAME = 20;LAST_FRAME = 75;
+FIRST_FRAME = 20;LAST_FRAME = 70;
 % FIRST_FRAME = 85;LAST_FRAME = 124;
 % FIRST_FRAME = 175;LAST_FRAME = 205;
 % FIRST_FRAME = 648;LAST_FRAME = 660;
@@ -47,3 +48,7 @@ coherency_window_lenght = 5;
 TAU_S = 0.1;
 
 unique_nodes_count = 0;
+
+tau_n = 1;
+tau_c = 0.5;
+COHERENCY_SCORE = 7;
