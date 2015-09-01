@@ -21,6 +21,7 @@ coherency_scores = [];
 places = [];
 nodes_all_frames = cell(1,LAST_FRAME-FIRST_FRAME);
 inter_matches_all_frames = cell(1,LAST_FRAME-FIRST_FRAME);
+unique_nodes = [];
 
 for frame_id = FIRST_FRAME:LAST_FRAME-1
     
@@ -55,7 +56,14 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     
     
     %fills - fixed size queue struct - coherency window 
-    [coherency_window,continuity_map,coherency_scores, I_current] = fillCoherencyWindow(frame_id,N1,E1,S1,N2,E2,S2,P,C,match_ratio,coherency_window,continuity_map,coherency_scores);
+    [coherency_window,continuity_map,...
+     coherency_scores, I_current,...
+     unique_nodes]     = fillCoherencyWindow(frame_id,N1,E1,S1,N2,E2,S2,P,C,...
+                                             match_ratio,...
+                                             coherency_window,...
+                                             continuity_map,...
+                                             coherency_scores,...
+                                             unique_nodes);
     
     %draw two segmented region adjacency graph and node-to-node matches
     drawMatches(frame_id,coherency_window,N1,E1,N2,E2,P,C);

@@ -1,9 +1,10 @@
-function [coherency_window,continuity_map,coherency_scores, I_current] = fillCoherencyWindow(frame_id,N1,E1,S1,N2,E2,S2,P,C,...
-  match_ratio,coherency_window,continuity_map,coherency_scores)
+function [coherency_window,continuity_map,coherency_scores, I_current, unique_nodes] = fillCoherencyWindow(frame_id,N1,E1,S1,N2,E2,S2,P,C,...
+  match_ratio,coherency_window,continuity_map,coherency_scores, unique_nodes)
 %add new frame attributions and matching results to window
 %this window has fixed size queue structure.
 
-global FIRST_FRAME BIG_NUMBER TAU_S coherency_window_lenght unique_nodes_count tau_m; 
+global FIRST_FRAME BIG_NUMBER TAU_S coherency_window_lenght ...
+       unique_nodes_count tau_m img_area; 
 
 if(frame_id == FIRST_FRAME)
     I_current = [1:size(N1,1)]';
@@ -59,6 +60,44 @@ for i = 1:size(not_matched_nodes_indices,1)
     end
 
 end
+%              1       2           3              4             5         6
+%unique_nodes: n | mean_area | mean_pos_x | pos_var_M2_x | pos_var_x | 
+%              
+%                  6              7            8          9
+%              mean_pos_y | pos_var_M2_y | pos_var_y | pos_var
+%resize to maximum unique node id
+if(size(unique_nodes,1) < max(I_current))
+  unique_nodes(max(I_current),9) = 0;
+end
+
+for i = 1:size(I_current,1)
+  unique_nodes(I_current(i),2) = (unique_nodes(I_current(i),1).*unique_nodes(I_current(i),2) + ...
+                                 N2{i,2}(4))/(unique_nodes(I_current(i),1)+1);
+    
+  [unique_nodes(I_current(i),3), ...
+   unique_nodes(I_current(i),4), ...
+   unique_nodes(I_current(i),5) ] = onlineVariance( N2{i,1}(1), ...
+                                                    unique_nodes(I_current(i),1), ...
+                                                    unique_nodes(I_current(i),3), ...
+                                                    unique_nodes(I_current(i),4) );
+                                                  
+  [unique_nodes(I_current(i),6), ...
+   unique_nodes(I_current(i),7), ...
+   unique_nodes(I_current(i),8) ] = onlineVariance( N2{i,1}(2), ...
+                                                    unique_nodes(I_current(i),1), ...
+                                                    unique_nodes(I_current(i),6), ...
+                                                    unique_nodes(I_current(i),7) );
+                                                  
+  unique_nodes(I_current(i),9) = norm([unique_nodes(I_current(i),5),unique_nodes(I_current(i),8)]);
+                                                  
+  unique_nodes(I_current(i),1) = unique_nodes(I_current(i),1) + 1; 
+end
+
+variances = unique_nodes(:,9);
+variances = variances / norm(variances,inf);
+variances(find(variances==0)) = 1;
+variances = 1 - variances;
+%unique_nodes(:,9) = variances;
 
 continuity_map(I_current,frame_id-FIRST_FRAME+1) = 1;
 
@@ -69,7 +108,9 @@ for i = 1:size(continuity_map,1)
   if(size(continuity_map,2) > 1 && ...
      continuity_map(i,end) == 0 && continuity_map(i,end-1) == 1)
     visible_duration = size(find(continuity_map(i,:)),2)/size(continuity_map,2);
-    coherency_score = coherency_score+visible_duration;
+    mean_segment_area = 20*unique_nodes(i,2) / img_area;
+    positional_variance = variances(i);
+    coherency_score = coherency_score+visible_duration+mean_segment_area+positional_variance;
   end
 end
 
