@@ -19,6 +19,8 @@ continuity_map = [];
 coherency_window = cell(7,coherency_window_lenght);
 coherency_scores = [];
 places = [];
+nodes_all_frames = cell(1,LAST_FRAME-FIRST_FRAME);
+inter_matches_all_frames = cell(1,LAST_FRAME-FIRST_FRAME);
 
 for frame_id = FIRST_FRAME:LAST_FRAME-1
     
@@ -53,25 +55,17 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     
     
     %fills - fixed size queue struct - coherency window 
-    [coherency_window,continuity_map,coherency_scores] = fillCoherencyWindow(frame_id,N1,E1,S1,N2,E2,S2,P,C,match_ratio,coherency_window,continuity_map,coherency_scores);
+    [coherency_window,continuity_map,coherency_scores, I_current] = fillCoherencyWindow(frame_id,N1,E1,S1,N2,E2,S2,P,C,match_ratio,coherency_window,continuity_map,coherency_scores);
     
     %draw two segmented region adjacency graph and node-to-node matches
     drawMatches(frame_id,coherency_window,N1,E1,N2,E2,P,C);
     
     places = detectPlace(coherency_window,places);
+    
+    nodes_all_frames{frame_id-FIRST_FRAME+1} = N2;
+    inter_matches_all_frames{frame_id-FIRST_FRAME+1} = I_current;
 end
 
-imagesc(continuity_map);
-colormap([1 1 1; 0 0 0]);
-
-%coherency_scores = coherency_scores/norm(coherency_scores,inf);
-%coherency_scores = coherency_scores*size(continuity_map,1);
-%match_ratios = cell2mat(coherency_window(6,:)); 
-hold on;
-plot(coherency_scores,'color','g','LineWidth',2);
-hold on;
-stairs(places(2:end),'color','r','LineWidth',2);
-%plot(match_ratios,'color','r','LineWidth',2);
-axis xy;
+plotResults(continuity_map, coherency_scores, places, nodes_all_frames, inter_matches_all_frames);
 
 save('coherency_window.mat','coherency_window');
