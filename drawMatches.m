@@ -58,7 +58,7 @@ for i = 1:size(N,1)
     rectangle('Position', [N{i,1}-[node_radius/2.0, node_radius/2.0],node_radius,node_radius],...
               'Curvature', [1,1],...
               'FaceColor', [colorR,colorG,colorB]);
-    text('color',[1,1,1],'position',[N{i,1}(1) N{i,1}(2)],'fontsize',15,'string',num2str(coherency_window{7,end-1}(i)));
+    text('color',[1,1,1],'position',[N{i,1}(1) N{i,1}(2)],'fontsize',15,'string',num2str(coherency_window{end,end-1}(i)));
         
     hold on;
 end
@@ -74,7 +74,7 @@ for i = 1:size(N,1)
     rectangle('Position', [N{i,1}-[node_radius/2.0-longest_width, node_radius/2.0],node_radius,node_radius],...
               'Curvature', [1,1],...
               'FaceColor', [colorR,colorG,colorB]);
-    text('color',[1,1,1],'position',[N{i,1}(1)+longest_width N{i,1}(2)],'fontsize',15,'string',num2str(coherency_window{7,end}(i)));
+    text('color',[1,1,1],'position',[N{i,1}(1)+longest_width N{i,1}(2)],'fontsize',15,'string',num2str(coherency_window{end,end}(i)));
     
     hold on;
 end

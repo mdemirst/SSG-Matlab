@@ -3,7 +3,7 @@ function [coherency_window,continuity_map,coherency_scores, I_current] = fillCoh
 %add new frame attributions and matching results to window
 %this window has fixed size queue structure.
 
-global FIRST_FRAME BIG_NUMBER TAU_S coherency_window_lenght unique_nodes_count; 
+global FIRST_FRAME BIG_NUMBER TAU_S coherency_window_lenght unique_nodes_count tau_m; 
 
 if(frame_id == FIRST_FRAME)
     I_current = [1:size(N1,1)]';
@@ -12,7 +12,9 @@ if(frame_id == FIRST_FRAME)
     unique_nodes_count = size(N1,1);
 end
 
-I_current = P'*coherency_window{end,end};
+C_thres = C < tau_m;
+P_thres = P & C_thres;
+I_current = P_thres'*coherency_window{end,end};
 
 
 % check if not matched nodes have corresponding matches in any of 
