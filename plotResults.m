@@ -5,6 +5,17 @@ global FIRST_FRAME DATASET_NO draw_cf_node_radius
 fig = figure;
 subplot(2,1,1);
 
+%mahmut: experimental
+h = size(continuity_map,1);
+
+for i=1:h
+  ind = findLongSeq(continuity_map(i,:));
+  continuity_map(i,:) = 0;
+  continuity_map(i,ind) = 1;
+end
+
+%mahmut: experimental ends
+
 imagesc(continuity_map);
 colormap([1 1 1; 0 0 0]);
 
