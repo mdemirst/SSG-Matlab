@@ -27,8 +27,8 @@ while(1)
     waitforbuttonpress
     c_info = getCursorInfo(dcm_obj);
     
-    selected_frame_id = c_info.Position(1);
-    selected_unique_node_id = c_info.Position(2);
+    selected_frame_id = floor(c_info.Position(1));
+    selected_unique_node_id = floor(c_info.Position(2));
     
     [X1,map1]=imread(strcat('Datasets/',num2str(DATASET_NO),...
                             '/cam-',zeroPad(FIRST_FRAME+selected_frame_id),...

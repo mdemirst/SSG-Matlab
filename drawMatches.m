@@ -1,7 +1,7 @@
 function drawMatches(frame_id, coherency_window, N1, E1, N2, E2, P, C)
 
 global draw_cf_node_radius draw_cf_match_line_width_a draw_cf_match_line_width_b ...
-       tau_m draw_matches save_drawn_matches...
+       tau_m draw_matches draw_match_lines save_drawn_matches...
        draw_indv_node_match_cost;
 
 if(draw_matches == 0)
@@ -79,28 +79,31 @@ for i = 1:size(N,1)
     hold on;
 end
 
+
 %draw matching lines
-for i = 1 : size(y,1)
-    
-    cost = C(y(i),x(i));
-    if(cost < tau_m)
-        cost = cost + cost;  
-        
-        %lines between matching nodes are weighted inversely prop to
-        %cost
-        matching_line_width = (draw_cf_match_line_width_a.^(-1*cost))*draw_cf_match_line_width_b;
+if(draw_match_lines)
+  for i = 1 : size(y,1)
 
-        line([N1{y(i),1}(1),N2{x(i),1}(1)+longest_width],...
-             [N1{y(i),1}(2),N2{x(i),1}(2)],...
-             'Color',[rand,rand,rand],...
-             'LineWidth',matching_line_width);
+      cost = C(y(i),x(i));
+      if(cost < tau_m)
+          cost = cost + cost;  
 
-        %draw match costs
-        %text('position',[N1{y(i),1}(1) N1{y(i),1}(2)-30],'fontsize',10,'string',num2str(C(y(i),x(i))))
-        %text('position',[N2{x(i),1}(1)+longest_width N2{x(i),1}(2)-30],'fontsize',10,'string',num2str(C(y(i),x(i))))
-        hold on;
-        
-    end
+          %lines between matching nodes are weighted inversely prop to
+          %cost
+          matching_line_width = (draw_cf_match_line_width_a.^(-1*cost))*draw_cf_match_line_width_b;
+
+          line([N1{y(i),1}(1),N2{x(i),1}(1)+longest_width],...
+               [N1{y(i),1}(2),N2{x(i),1}(2)],...
+               'Color',[rand,rand,rand],...
+               'LineWidth',matching_line_width);
+
+          %draw match costs
+          %text('position',[N1{y(i),1}(1) N1{y(i),1}(2)-30],'fontsize',10,'string',num2str(C(y(i),x(i))))
+          %text('position',[N2{x(i),1}(1)+longest_width N2{x(i),1}(2)-30],'fontsize',10,'string',num2str(C(y(i),x(i))))
+          hold on;
+
+      end
+  end
 end
   
 if(draw_indv_node_match_cost)

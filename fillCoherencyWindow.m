@@ -3,8 +3,11 @@ function [coherency_window,continuity_map,coherency_scores, I_current, unique_no
 %add new frame attributions and matching results to window
 %this window has fixed size queue structure.
 
-global FIRST_FRAME BIG_NUMBER TAU_S coherency_window_lenght ...
-       unique_nodes_count tau_m img_area; 
+global FIRST_FRAME BIG_NUMBER coherency_window_lenght ...
+       unique_nodes_count tau_m img_area ...
+       TAU_D TAU_A TAU_P test_data; 
+     
+
 
 if(frame_id == FIRST_FRAME)
     I_current = [1:size(N1,1)]';
@@ -13,8 +16,8 @@ if(frame_id == FIRST_FRAME)
     unique_nodes_count = size(N1,1);
 end
 
-C_thres = C < tau_m;
-P_thres = P & C_thres;
+C_thres = C < tau_m; %only matches with low node-to-node match cost
+P_thres = P & C_thres; 
 I_current = P_thres'*coherency_window{end,end};
 
 
@@ -37,6 +40,8 @@ for i = 1:size(not_matched_nodes_indices,1)
     for j = 1:size(coherency_window,2)-1
         % find nodes in jth window frame whose ids
         % is not of the matched node ids of the last frame
+        % that step is required because we don't want to match with nodes
+        % that have already matched.
         candidate_nodes = find(ismember(coherency_window{end,j}, matched_nodes_ids) == 0);
 
         for k = 1:size(candidate_nodes,1)
@@ -51,9 +56,9 @@ for i = 1:size(not_matched_nodes_indices,1)
         end
     end
 
-    %mahmut: bunu yapinca listeyi tekrar guncelle
-    if(smallest_dist < TAU_S) %save with matched node's id
+    if(smallest_dist < tau_m) %save with matched node's id
         I_current(not_matched_nodes_indices(i)) = smallest_dist_id;
+        matched_nodes_ids(matched_nodes_ids==smallest_dist_id) = [];
     else %save with new id
         unique_nodes_count = unique_nodes_count + 1;
         I_current(not_matched_nodes_indices(i)) = unique_nodes_count;
@@ -107,11 +112,35 @@ for i = 1:size(continuity_map,1)
   %disappeared node
   if(size(continuity_map,2) > 1 && ...
      continuity_map(i,end) == 0 && continuity_map(i,end-1) == 1)
-    visible_duration = size(find(continuity_map(i,:)),2)/size(continuity_map,2);
-    mean_segment_area = 20*unique_nodes(i,2) / img_area;
+   
+    %mahmut: aradaki zerolari silersen manasi kalmaz--ayrica max visible
+    %duration kullanmak pek mantikli degil gibi. dusunelim...
+    zero_indices = find(continuity_map(i,:)==0);
+    min_one_indices = find(continuity_map(i,:), 1 );
+    max_one_indices = find(continuity_map(i,:), 1, 'last' );
+    
+    max_visible_duration = size(continuity_map,2) - min_one_indices;
+    max_visible_duration = max_visible_duration - ...
+            size(zero_indices(zero_indices > min_one_indices & ...
+                              zero_indices < max_one_indices),2);
+    
+    %visible_duration = size(find(continuity_map(i,:)),2);
+    visible_duration = find(continuity_map(i,:),1,'last') - find(continuity_map(i,1:end-1)==0, 1, 'last' );
+    if(isempty(visible_duration))
+      visible_duration = 0;
+    elseif(visible_duration < 0)
+      visible_duration = 0;
+    end
+    mean_segment_area = unique_nodes(i,2) / img_area;
     positional_variance = variances(i);
-    coherency_score = coherency_score+visible_duration+mean_segment_area+positional_variance;
+    if(visible_duration > 3)
+    coherency_score = coherency_score + ...
+                      TAU_D * visible_duration ;
+    end
+    %test_data = [test_data;visible_duration weight_cost(mean_segment_area) positional_variance];
   end
+  
+
 end
 
 coherency_scores(1,frame_id-FIRST_FRAME+1) = coherency_score;
