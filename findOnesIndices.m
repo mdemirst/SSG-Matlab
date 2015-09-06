@@ -1,4 +1,4 @@
-function indices = findLongSeq(sig)
+function [startIndex,endIndex,duration] = findOnesIndices(sig)
 
 tsig = (abs(sig) < 1);  %# Using eps as the threshold
 
@@ -7,7 +7,7 @@ startIndex = find(dsig < 0);
 endIndex = find(dsig > 0)-1;
 duration = endIndex-startIndex+1;
 
-stringIndex = (duration >= 5);
+stringIndex = (duration >= 1);
 startIndex = startIndex(stringIndex);
 endIndex = endIndex(stringIndex);
 

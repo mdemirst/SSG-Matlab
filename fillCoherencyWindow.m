@@ -5,7 +5,7 @@ function [coherency_window,continuity_map,coherency_scores, I_current, unique_no
 
 global FIRST_FRAME BIG_NUMBER coherency_window_lenght ...
        unique_nodes_count tau_m img_area ...
-       TAU_D TAU_A TAU_P test_data; 
+       TAU_D TAU_F TAU_A TAU_P test_data; 
      
 
 
@@ -106,50 +106,47 @@ variances = 1 - variances;
 
 continuity_map(I_current,frame_id-FIRST_FRAME+1) = 1;
 
-coherency_score = 0;
+dissimilarity_score = 0;
 
-for i = 1:size(continuity_map,1)
-  %disappeared node
-  if(size(continuity_map,2) > 1 && ...
-     continuity_map(i,end) == 0 && continuity_map(i,end-1) == 1)
-   
-    %mahmut: aradaki zerolari silersen manasi kalmaz--ayrica max visible
-    %duration kullanmak pek mantikli degil gibi. dusunelim...
-    zero_indices = find(continuity_map(i,:)==0);
-    min_one_indices = find(continuity_map(i,:), 1 );
-    max_one_indices = find(continuity_map(i,:), 1, 'last' );
+if(size(coherency_window,2) >= coherency_window_lenght) 
+  for i = 1:size(continuity_map,1)
+    cursor = size(continuity_map,2)-floor(coherency_window_lenght/2);
     
-    max_visible_duration = size(continuity_map,2) - min_one_indices;
-    max_visible_duration = max_visible_duration - ...
-            size(zero_indices(zero_indices > min_one_indices & ...
-                              zero_indices < max_one_indices),2);
+    %disappeared node
+    if(continuity_map(i,cursor) == 0 && continuity_map(i,cursor-1) == 1)
+
+      [s,e,dur] = findOnesIndices(continuity_map(i,1:cursor));
+      visible_duration = dur(end);
+      mean_segment_area = unique_nodes(i,2) / img_area;
+      positional_variance = variances(i);
+      if(visible_duration >= TAU_F)
+        dissimilarity_score = dissimilarity_score + ...
+                              TAU_D * visible_duration * ...
+                                      mean_segment_area ;
+      end
+      %test_data = [test_data;visible_duration weight_cost(mean_segment_area) positional_variance];
+    end
     
-    %visible_duration = size(find(continuity_map(i,:)),2);
-    visible_duration = find(continuity_map(i,:),1,'last') - find(continuity_map(i,1:end-1)==0, 1, 'last' );
-    if(isempty(visible_duration))
-      visible_duration = 0;
-    elseif(visible_duration < 0)
-      visible_duration = 0;
+    %appeared node
+    if(continuity_map(i,cursor) == 1 && continuity_map(i,cursor-1) == 0)
+      [s,e,dur] = findOnesIndices(continuity_map(i,cursor:end));
+      visible_duration = dur(end);
+      mean_segment_area = unique_nodes(i,2) / img_area;
+      positional_variance = variances(i);
+      
+      dissimilarity_score = dissimilarity_score + ...
+                            TAU_D * visible_duration * ...
+                                    mean_segment_area ;
     end
-    mean_segment_area = unique_nodes(i,2) / img_area;
-    positional_variance = variances(i);
-    if(visible_duration > 3)
-    coherency_score = coherency_score + ...
-                      TAU_D * visible_duration ;
-    end
-    %test_data = [test_data;visible_duration weight_cost(mean_segment_area) positional_variance];
   end
   
+  new_frame = {N2;E2;S2;P;C;match_ratio;dissimilarity_score;I_current};
+  coherency_window = [coherency_window(:,2:coherency_window_lenght) new_frame];
 
-end
-
-coherency_scores(1,frame_id-FIRST_FRAME+1) = coherency_score;
-
-if(size(coherency_window,2) < coherency_window_lenght)
-    new_frame = {N2;E2;S2;P;C;match_ratio;coherency_score;I_current};
-    coherency_window = [coherency_window new_frame];
+  coherency_scores(1,cursor) = sum(cell2mat(coherency_window(7,:)));
 else
-    new_frame = {N2;E2;S2;P;C;match_ratio;coherency_score;I_current};
-    coherency_window = [coherency_window(:,2:coherency_window_lenght) new_frame];
+  new_frame = {N2;E2;S2;P;C;match_ratio;dissimilarity_score;I_current};
+  coherency_window = [coherency_window new_frame];
 end
+
 
