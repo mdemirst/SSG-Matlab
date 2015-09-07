@@ -22,6 +22,13 @@ places = [];
 nodes_all_frames = cell(1,LAST_FRAME-FIRST_FRAME);
 inter_matches_all_frames = cell(1,LAST_FRAME-FIRST_FRAME);
 unique_nodes = [];
+match_ratios = [];
+
+args1 = strcat(' 0.0 250 1000 Datasets/',num2str(DATASET_NO),...
+                     '/',FILE_HEADER,zeroPad(FIRST_FRAME),...
+                     num2str(FIRST_FRAME),...
+                     '.jpg segment1');
+system([exec_dir segmentation_app_filename args1]);
 
 for frame_id = FIRST_FRAME:LAST_FRAME-1
     
@@ -30,24 +37,30 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     %arg#3: min_size - minimum component size
          
     % camvid - already segmented dataset
-    args1 = strcat(' 0.0 250 1000 Datasets/',num2str(DATASET_NO),...
-                   '/cam-',zeroPad(frame_id),...
-                   num2str(frame_id),...
-                   '.ppm segment1');
-    args2 = strcat(' 0.0 250 1000 Datasets/',num2str(DATASET_NO),...
-                   '/cam-',zeroPad(frame_id+1),...
-                   num2str(frame_id+1),...
-                   '.ppm segment2');
+%     args1 = strcat(' 0.0 250 1000 Datasets/',num2str(DATASET_NO),...
+%                    '/cam-',zeroPad(frame_id),...
+%                    num2str(frame_id),...
+%                    '.ppm segment1');
+%     args2 = strcat(' 0.0 250 1000 Datasets/',num2str(DATASET_NO),...
+%                    '/cam-',zeroPad(frame_id+1),...
+%                    num2str(frame_id+1),...
+%                    '.ppm segment2');
+
+    % newcollege
+      args2 = strcat(' 0.0 250 1000 Datasets/',num2str(DATASET_NO),...
+                     '/',FILE_HEADER,zeroPad(frame_id+1),...
+                     num2str(frame_id+1),...
+                     '.jpg segment2');
                
     %run segmentation algorithm implemented on cpp
     %cpp file produces segment1_graph.txt and segment2_graph.txt
     %on the local directory
-    system([exec_dir segmentation_app_filename args1]);
     system([exec_dir segmentation_app_filename args2]);
     
     %reads produced txt files and creates node signatures
     [N1, E1, S1] = readGraphFromFile([working_dir 'segment1_graph.txt']);
     [N2, E2, S2] = readGraphFromFile([working_dir 'segment2_graph.txt']);
+    movefile('segment2_graph.txt','segment1_graph.txt');
     
     %calculates cost adjacency matrix and find permutation matrix P
     %that defines an optimal match between two graphs
@@ -74,8 +87,9 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     
     nodes_all_frames{frame_id-FIRST_FRAME+1} = N2;
     inter_matches_all_frames{frame_id-FIRST_FRAME+1} = I_current;
+    match_ratios(1,frame_id-FIRST_FRAME+1) = match_ratio;
 end
 
-plotResults(continuity_map, coherency_scores, places, nodes_all_frames, inter_matches_all_frames);
+plotResults(continuity_map, coherency_scores, places, nodes_all_frames, inter_matches_all_frames, match_ratios);
 
 save('coherency_window.mat','coherency_window');

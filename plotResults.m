@@ -1,6 +1,7 @@
-function plotResults(continuity_map, coherency_scores, places, nodes_all_frames, inter_matches_all_frames)
+function plotResults(continuity_map, coherency_scores, places, ...
+  nodes_all_frames, inter_matches_all_frames, match_ratios)
 
-global FIRST_FRAME DATASET_NO draw_cf_node_radius
+global FIRST_FRAME DATASET_NO draw_cf_node_radius FILE_HEADER
 
 fig = figure;
 subplot(2,1,1);
@@ -16,17 +17,25 @@ subplot(2,1,1);
 
 %mahmut: experimental ends
 
+%draw black-white continuity map
 imagesc(continuity_map);
 colormap([1 1 1; 0 0 0]);
-
-coherency_scores = coherency_scores/norm(coherency_scores,inf);
-coherency_scores = coherency_scores*size(continuity_map,1);
-%match_ratios = cell2mat(coherency_window(6,:)); 
 hold on;
+
+plot_height = size(continuity_map,1);
+
+%plot coherency scores
+coherency_scores = normalize_var(coherency_scores,0,plot_height);
 plot(coherency_scores,'color','g','LineWidth',2);
 hold on;
+
+%plot detected places
 stairs(places(2:end),'color','r','LineWidth',2);
-%plot(match_ratios,'color','r','LineWidth',2);
+hold on;
+
+%plot consecutive frames match ratios
+match_ratios = normalize_var(match_ratios,0,plot_height);
+%plot(match_ratios,'color','b','LineWidth',2);
 axis xy;
 
 dcm_obj = datacursormode(fig);
@@ -42,9 +51,9 @@ while(1)
     selected_unique_node_id = floor(c_info.Position(2));
     
     [X1,map1]=imread(strcat('Datasets/',num2str(DATASET_NO),...
-                            '/cam-',zeroPad(FIRST_FRAME+selected_frame_id),...
+                            '/',FILE_HEADER,zeroPad(FIRST_FRAME+selected_frame_id),...
                             num2str(FIRST_FRAME+selected_frame_id),...
-                            '.ppm'));
+                            '.jpg'));
                           
     subplot(2,1,2);
 

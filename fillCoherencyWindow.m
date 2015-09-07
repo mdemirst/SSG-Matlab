@@ -5,7 +5,9 @@ function [coherency_window,continuity_map,coherency_scores, I_current, unique_no
 
 global FIRST_FRAME BIG_NUMBER coherency_window_lenght ...
        unique_nodes_count tau_m img_area ...
-       TAU_D TAU_F TAU_A TAU_P test_data; 
+       TAU_D TAU_F TAU_A TAU_P test_data ...
+       SIGMF_A SIGMF_C ...
+       INDEX_MATCH_RATIO INDEX_DISSIM_SCORE INDEX_I_CURRENT; 
      
 
 
@@ -107,11 +109,13 @@ variances = 1 - variances;
 continuity_map(I_current,frame_id-FIRST_FRAME+1) = 1;
 
 dissimilarity_score = 0;
+window_coherency_score = 0;
 
 if(size(coherency_window,2) >= coherency_window_lenght) 
   for i = 1:size(continuity_map,1)
-    cursor = size(continuity_map,2)-floor(coherency_window_lenght/2);
-    
+    half_win_len = floor(coherency_window_lenght/2);
+    cursor = size(continuity_map,2)-half_win_len;
+       
     %disappeared node
     if(continuity_map(i,cursor) == 0 && continuity_map(i,cursor-1) == 1)
 
@@ -140,10 +144,16 @@ if(size(coherency_window,2) >= coherency_window_lenght)
     end
   end
   
+  active_nodes = any(continuity_map(:,cursor-half_win_len:cursor+half_win_len),2);
+  
+  window_coherency_score = sum(sum(continuity_map(active_nodes,cursor-half_win_len:cursor+half_win_len)))/...
+    numel(continuity_map(active_nodes,cursor-half_win_len:cursor+half_win_len));
+  
   new_frame = {N2;E2;S2;P;C;match_ratio;dissimilarity_score;I_current};
   coherency_window = [coherency_window(:,2:coherency_window_lenght) new_frame];
 
-  coherency_scores(1,cursor) = sum(cell2mat(coherency_window(7,:)));
+  coherency_scores(1,cursor) = sum(cell2mat(coherency_window(INDEX_DISSIM_SCORE,:)))*...
+                               (1-sigmf(window_coherency_score,[SIGMF_A,SIGMF_C]));
 else
   new_frame = {N2;E2;S2;P;C;match_ratio;dissimilarity_score;I_current};
   coherency_window = [coherency_window new_frame];
