@@ -23,12 +23,14 @@ nodes_all_frames = cell(1,LAST_FRAME-FIRST_FRAME);
 inter_matches_all_frames = cell(1,LAST_FRAME-FIRST_FRAME);
 unique_nodes = [];
 match_ratios = [];
+summary_graphs = [];
 
-args1 = strcat(' 0.0 250 1000 Datasets/',num2str(DATASET_NO),...
-                     '/',FILE_HEADER,zeroPad(FIRST_FRAME),...
-                     num2str(FIRST_FRAME),...
-                     '.jpg segment1');
-system([exec_dir segmentation_app_filename args1]);
+args1 = strcat({' '},PAR_SIGMA,{' '},PAR_K,{' '},PAR_MIN_SIZE,{' '},...
+               'Datasets/',num2str(DATASET_NO),...
+               '/',FILE_HEADER,zeroPad(FIRST_FRAME),...
+               num2str(FIRST_FRAME),...
+               '.jpg segment1');
+system([exec_dir segmentation_app_filename args1{1}]);
 
 for frame_id = FIRST_FRAME:LAST_FRAME-1
     
@@ -47,7 +49,8 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
 %                    '.ppm segment2');
 
     % newcollege
-      args2 = strcat(' 0.0 250 1000 Datasets/',num2str(DATASET_NO),...
+      args2 = strcat({' '},PAR_SIGMA,{' '},PAR_K,{' '},PAR_MIN_SIZE,{' '},...
+                     'Datasets/',num2str(DATASET_NO),...
                      '/',FILE_HEADER,zeroPad(frame_id+1),...
                      num2str(frame_id+1),...
                      '.jpg segment2');
@@ -55,12 +58,13 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     %run segmentation algorithm implemented on cpp
     %cpp file produces segment1_graph.txt and segment2_graph.txt
     %on the local directory
-    system([exec_dir segmentation_app_filename args2]);
+    system([exec_dir segmentation_app_filename args2{1}]);
     
     %reads produced txt files and creates node signatures
     [N1, E1, S1] = readGraphFromFile([working_dir 'segment1_graph.txt']);
     [N2, E2, S2] = readGraphFromFile([working_dir 'segment2_graph.txt']);
     movefile('segment2_graph.txt','segment1_graph.txt');
+    
     
     %calculates cost adjacency matrix and find permutation matrix P
     %that defines an optimal match between two graphs
@@ -82,14 +86,18 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     
     %draw two segmented region adjacency graph and node-to-node matches
     drawMatches(frame_id,coherency_window,N1,E1,N2,E2,P,C);
+    movefile('segment2.jpg','segment1.jpg');
     
     places = detectPlace(coherency_window,places);
+    
+    summary_graphs = updateSummaryGraph(places, coherency_window, summary_graphs);
     
     nodes_all_frames{frame_id-FIRST_FRAME+1} = N2;
     inter_matches_all_frames{frame_id-FIRST_FRAME+1} = I_current;
     match_ratios(1,frame_id-FIRST_FRAME+1) = match_ratio;
 end
 
-plotResults(continuity_map, coherency_scores, places, nodes_all_frames, inter_matches_all_frames, match_ratios);
+plotResults(continuity_map, coherency_scores, places, nodes_all_frames, ...
+            inter_matches_all_frames, match_ratios, summary_graphs);
 
 save('coherency_window.mat','coherency_window');

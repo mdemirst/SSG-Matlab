@@ -1,10 +1,10 @@
 function plotResults(continuity_map, coherency_scores, places, ...
-  nodes_all_frames, inter_matches_all_frames, match_ratios)
+  nodes_all_frames, inter_matches_all_frames, match_ratios, summary_graphs)
 
 global FIRST_FRAME DATASET_NO draw_cf_node_radius FILE_HEADER
 
-fig = figure;
-subplot(2,1,1);
+fig = figure('units','normalized','outerposition',[0 0 1 1]);
+subplot(3,1,1);
 
 %mahmut: experimental
 % h = size(continuity_map,1);
@@ -25,7 +25,7 @@ hold on;
 plot_height = size(continuity_map,1);
 
 %plot coherency scores
-coherency_scores = normalize_var(coherency_scores,0,plot_height);
+coherency_scores_normalized = normalize_var(coherency_scores,0,plot_height);
 plot(coherency_scores,'color','g','LineWidth',2);
 hold on;
 
@@ -55,9 +55,10 @@ while(1)
                             num2str(FIRST_FRAME+selected_frame_id),...
                             '.jpg'));
                           
-    subplot(2,1,2);
+    subplot(3,1,2);
 
     imshow(X1,map1);
+    hold on;
                   
     if(continuity_map(selected_unique_node_id,selected_frame_id) == 1)
       inter_matches = inter_matches_all_frames{selected_frame_id};
@@ -70,12 +71,41 @@ while(1)
       colorG = selected_node{1,2}(2)/255;
       colorB = selected_node{1,2}(3)/255;
         
-      hold on;
+      
       rectangle('Position', [selected_node{1,1}-[nodeRadius/2.0, nodeRadius/2.0],nodeRadius,nodeRadius],...
                 'Curvature', [1,1],...
                 'FaceColor', [0,1,0]);
+      hold on;
     end
     
+    %plot corresponding summary graph
+    subplot(3,1,3);
+    axis equal;
+    set(gcf,'Visible','off');
+    set(gca,'Ydir','reverse')
+    set(gca,'XTick',[])
+    set(gca,'YTick',[])
+    set(gca,'XColor',[1,1,1]);
+    set(gca,'YColor',[1,1,1]);
+        
+    place_id = places(selected_frame_id);
+    if(place_id > 0)
+      for i = 1:size(vertcat(summary_graphs{:,place_id}),1)
+        avg_node = summary_graphs{i,place_id};
+        
+        if(avg_node{1,1} > 5)
+          node_radius = avg_node{1,1};
+          colorR = avg_node{1,3}(1)/255;
+          colorG = avg_node{1,3}(2)/255;
+          colorB = avg_node{1,3}(3)/255;
+
+          rectangle('Position', [avg_node{1,2}-[node_radius/2.0, node_radius/2.0],node_radius,node_radius],...
+                    'Curvature', [1,1],...
+                    'FaceColor', [colorR,colorG,colorB]);
+          hold on;
+        end
+      end
+    end
 
 end
 

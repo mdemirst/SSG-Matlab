@@ -1,5 +1,6 @@
 global working_dir exec_dir segmentation_app_filename ...
        DATASET_NO FIRST_FRAME LAST_FRAME ...
+       PAR_SIGMA PAR_K PAR_MIN_SIZE ...
        BIG_NUMBER ...
        img_height img_width img_area ...
        position_weight color_weight edge_weight area_weight ...
@@ -13,11 +14,15 @@ global working_dir exec_dir segmentation_app_filename ...
        SIGMF_A SIGMF_C ...
        INDEX_MATCH_RATIO INDEX_DISSIM_SCORE INDEX_I_CURRENT FILE_HEADER;
 
+PAR_SIGMA = '0.7';
+PAR_K = '150';
+PAR_MIN_SIZE = '1000';
+
 exec_dir = '/home/isl-mahmut-ubuntu/Code/GraphSegmentation/Release/';
 working_dir = '/media/isl-mahmut-ubuntu/YEDEK/REPO/SegmentsSummaryGraphs/';
 segmentation_app_filename = '"GraphSegmentation"';
 
-FILE_HEADER = 'NewCollege-';
+FILE_HEADER = 'Cold-';
 BIG_NUMBER = 9999;
 
 %DATASET_NO = 1;
@@ -50,13 +55,16 @@ BIG_NUMBER = 9999;
 %DATASET_NO = 10;
 %FIRST_FRAME = 644;LAST_FRAME = 654; %10
 
-DATASET_NO = 12;
-FIRST_FRAME = 60;LAST_FRAME = 116; %12
+% DATASET_NO = 12;
+% FIRST_FRAME = 300;LAST_FRAME = 400; %12
 
-% img_height = 240;
-% img_width = 320;
-img_height = 384;
-img_width = 512;
+DATASET_NO = 13;
+FIRST_FRAME = 1;LAST_FRAME = 100; %13
+
+img_height = 240;
+img_width = 320;
+% img_height = 192;
+% img_width = 256;
 img_area = img_height*img_width;
 
 position_weight = 0.5;%100;
@@ -74,16 +82,16 @@ draw_cf_match_line_width_b = 5;
 tau_m = 0.015; %cost_thres - node-to-node match threshold in order to be
                %regarded as good match
 
-draw_matches = 1;
+draw_matches = 0;
 draw_match_lines = 0;
 save_drawn_matches = 0;
 draw_indv_node_match_cost = 0;
 
-coherency_window_lenght = 5;
+coherency_window_lenght = 11;
 
 unique_nodes_count = 0;
 
-tau_n = 2;
+tau_n = 3;
 tau_c = 10;
 COHERENCY_SCORE = 7;
 

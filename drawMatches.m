@@ -121,6 +121,7 @@ end
 if(save_drawn_matches)
     saveas(gcf,[num2str(frame_id),'-',num2str(frame_id+1),'.png']);
 end
+set(match_figure,'Units', 'Normalized', 'OuterPosition', [0 0 1 1]);
 waitforbuttonpress;
 delete(match_figure);
 
