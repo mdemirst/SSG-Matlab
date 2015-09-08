@@ -1,16 +1,15 @@
-function places = detectPlace(coherency_window, places)
+function places = detectPlace(coherency_scores, places)
 
-global tau_c tau_n coherency_window_lenght COHERENCY_SCORE;
+global tau_c tau_n coherency_window_lenght;
 
-if(size(coherency_window,2) == coherency_window_lenght)
+if(size(coherency_scores,2) >= coherency_window_lenght)
   %first place/transition detection
   if(isempty(places))
     %first frame is place #1 if coherency score is below threshold else it is 
     %transition region.
-    places(1) = cell2mat(coherency_window(COHERENCY_SCORE,2)) < tau_c;
+    places(1) = coherency_scores(1) < tau_c;
   else
-    coherency_scores = cell2mat(coherency_window(COHERENCY_SCORE,:));
-    coherency_scores_thres = coherency_scores < tau_c;
+    coherency_scores_thres = coherency_scores(end-coherency_window_lenght:end) < tau_c;
     
     cur_region_len = size(coherency_scores_thres,2);
     for i=1:size(coherency_scores_thres,2)-1
@@ -19,7 +18,7 @@ if(size(coherency_window,2) == coherency_window_lenght)
         break;
       end
     end
-    cur_region_type = cell2mat(coherency_window(COHERENCY_SCORE,1)) < tau_c;
+    cur_region_type = coherency_scores(end-coherency_window_lenght) < tau_c;
     
     last_place_type = places(end) > 0;
     next_place_type = -1;

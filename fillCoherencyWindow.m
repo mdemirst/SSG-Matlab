@@ -152,9 +152,10 @@ if(size(coherency_window,2) >= coherency_window_lenght)
   new_frame = {N2;E2;S2;P;C;match_ratio;dissimilarity_score;I_current};
   coherency_window = [coherency_window(:,2:coherency_window_lenght) new_frame];
 
-%   coherency_scores(1,cursor) = sum(cell2mat(coherency_window(INDEX_DISSIM_SCORE,:)))*...
-%                                (1-sigmf(window_coherency_score,[SIGMF_A,SIGMF_C]));
-  coherency_scores(1,cursor) = sum(cell2mat(coherency_window(INDEX_DISSIM_SCORE,:)));
+  coherency_scores(1,cursor) = sum(cell2mat(coherency_window(INDEX_DISSIM_SCORE,:)))*...
+                               (1-sigmf(window_coherency_score,[SIGMF_A,SIGMF_C])) / ...
+                               coherency_window_lenght;
+%   coherency_scores(1,cursor) = sum(cell2mat(coherency_window(INDEX_DISSIM_SCORE,:)));
 else
   new_frame = {N2;E2;S2;P;C;match_ratio;dissimilarity_score;I_current};
   coherency_window = [coherency_window new_frame];

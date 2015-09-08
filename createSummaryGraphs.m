@@ -15,6 +15,8 @@ function createSummaryGraphs()
 
 parameters(); %load parameters
 
+global img_height img_width img_dim img_area;
+
 continuity_map = [];
 coherency_window = cell(7,coherency_window_lenght);
 coherency_scores = [];
@@ -29,8 +31,12 @@ args1 = strcat({' '},PAR_SIGMA,{' '},PAR_K,{' '},PAR_MIN_SIZE,{' '},...
                'Datasets/',num2str(DATASET_NO),...
                '/',FILE_HEADER,zeroPad(FIRST_FRAME),...
                num2str(FIRST_FRAME),...
-               '.jpg segment1');
+               FILE_SUFFIX, {' '}, 'segment1', {' '}, SCALE_DOWN_RATIO);
 system([exec_dir segmentation_app_filename args1{1}]);
+sample_image = imread('segment1.jpg');
+[img_height, img_width, img_dim] = size(sample_image);
+img_area = img_height*img_width;
+
 
 for frame_id = FIRST_FRAME:LAST_FRAME-1
     
@@ -53,7 +59,7 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
                      'Datasets/',num2str(DATASET_NO),...
                      '/',FILE_HEADER,zeroPad(frame_id+1),...
                      num2str(frame_id+1),...
-                     '.jpg segment2');
+                     FILE_SUFFIX, {' '}, 'segment2', {' '}, SCALE_DOWN_RATIO);
                
     %run segmentation algorithm implemented on cpp
     %cpp file produces segment1_graph.txt and segment2_graph.txt
@@ -88,7 +94,7 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     drawMatches(frame_id,coherency_window,N1,E1,N2,E2,P,C);
     movefile('segment2.jpg','segment1.jpg');
     
-    places = detectPlace(coherency_window,places);
+    places = detectPlace(coherency_scores,places);
     
     summary_graphs = updateSummaryGraph(places, coherency_window, summary_graphs);
     

@@ -1,7 +1,8 @@
 function plotResults(continuity_map, coherency_scores, places, ...
   nodes_all_frames, inter_matches_all_frames, match_ratios, summary_graphs)
 
-global FIRST_FRAME DATASET_NO draw_cf_node_radius FILE_HEADER
+global FIRST_FRAME DATASET_NO draw_cf_node_radius FILE_HEADER FILE_SUFFIX ...
+  NODE_PERCENT_THRES;
 
 fig = figure('units','normalized','outerposition',[0 0 1 1]);
 subplot(3,1,1);
@@ -26,7 +27,7 @@ plot_height = size(continuity_map,1);
 
 %plot coherency scores
 coherency_scores_normalized = normalize_var(coherency_scores,0,plot_height);
-plot(coherency_scores,'color','g','LineWidth',2);
+plot(coherency_scores_normalized,'color','g','LineWidth',2);
 hold on;
 
 %plot detected places
@@ -53,7 +54,7 @@ while(1)
     [X1,map1]=imread(strcat('Datasets/',num2str(DATASET_NO),...
                             '/',FILE_HEADER,zeroPad(FIRST_FRAME+selected_frame_id),...
                             num2str(FIRST_FRAME+selected_frame_id),...
-                            '.jpg'));
+                            FILE_SUFFIX));
                           
     subplot(3,1,2);
 
@@ -74,12 +75,12 @@ while(1)
       
       rectangle('Position', [selected_node{1,1}-[nodeRadius/2.0, nodeRadius/2.0],nodeRadius,nodeRadius],...
                 'Curvature', [1,1],...
-                'FaceColor', [0,1,0]);
+                'FaceColor', [1,0,0]);
       hold on;
     end
     
     %plot corresponding summary graph
-    subplot(3,1,3);
+    h3 = subplot(3,1,3);
     axis equal;
     set(gcf,'Visible','off');
     set(gca,'Ydir','reverse')
@@ -88,21 +89,26 @@ while(1)
     set(gca,'XColor',[1,1,1]);
     set(gca,'YColor',[1,1,1]);
         
-    place_id = places(selected_frame_id);
-    if(place_id > 0)
-      for i = 1:size(vertcat(summary_graphs{:,place_id}),1)
-        avg_node = summary_graphs{i,place_id};
-        
-        if(avg_node{1,1} > 5)
-          node_radius = avg_node{1,1};
-          colorR = avg_node{1,3}(1)/255;
-          colorG = avg_node{1,3}(2)/255;
-          colorB = avg_node{1,3}(3)/255;
+    if(size(places,2) < selected_frame_id || places(selected_frame_id) <= 0)
+      cla(h3);
+    else
+      place_id = places(selected_frame_id); 
+      place_length = size(find(places == place_id),2);
+      if(place_id > 0)
+        for i = 1:size(vertcat(summary_graphs{:,place_id}),1)
+          avg_node = summary_graphs{i,place_id};
 
-          rectangle('Position', [avg_node{1,2}-[node_radius/2.0, node_radius/2.0],node_radius,node_radius],...
-                    'Curvature', [1,1],...
-                    'FaceColor', [colorR,colorG,colorB]);
-          hold on;
+          if(~isempty(avg_node) && avg_node{1,1} > NODE_PERCENT_THRES*place_length)
+            node_radius = avg_node{1,3}(4)*draw_cf_node_radius;
+            colorR = avg_node{1,3}(3)/255;
+            colorG = avg_node{1,3}(2)/255;
+            colorB = avg_node{1,3}(1)/255;
+
+            rectangle('Position', [avg_node{1,2}-[node_radius/2.0, node_radius/2.0],node_radius,node_radius],...
+                      'Curvature', [1,1],...
+                      'FaceColor', [colorR,colorG,colorB]);
+            hold on;
+          end
         end
       end
     end
