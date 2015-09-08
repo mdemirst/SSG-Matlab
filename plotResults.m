@@ -1,5 +1,6 @@
 function plotResults(continuity_map, coherency_scores, places, ...
-  nodes_all_frames, inter_matches_all_frames, match_ratios, summary_graphs)
+  nodes_all_frames, inter_matches_all_frames, match_ratios, summary_graphs, ...
+  recognized_places)
 
 global FIRST_FRAME DATASET_NO draw_cf_node_radius FILE_HEADER FILE_SUFFIX ...
   NODE_PERCENT_THRES;
@@ -29,6 +30,12 @@ plot_height = size(continuity_map,1);
 coherency_scores_normalized = normalize_var(coherency_scores,0,plot_height);
 plot(coherency_scores_normalized,'color','g','LineWidth',2);
 hold on;
+
+%plot performance results
+if(~isempty(recognized_places))
+  stairs(recognized_places(1,:), 'color','b','LineWidth',5);
+  hold on;
+end
 
 %plot detected places
 stairs(places(2:end),'color','r','LineWidth',2);

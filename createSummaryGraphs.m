@@ -103,7 +103,10 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     match_ratios(1,frame_id-FIRST_FRAME+1) = match_ratio;
 end
 
+recognized_places = performanceMeasurement(summary_graphs);
+
 plotResults(continuity_map, coherency_scores, places, nodes_all_frames, ...
-            inter_matches_all_frames, match_ratios, summary_graphs);
+            inter_matches_all_frames, match_ratios, summary_graphs, ...
+            recognized_places);
 
 save('coherency_window.mat','coherency_window');

@@ -35,21 +35,21 @@ BIG_NUMBER = 9999;
 % FIRST_FRAME = 85;LAST_FRAME = 124; %2
 % FILE_HEADER = 'CamVid-';
 % FILE_SUFFIX = '.ppm';
-
+% 
 % DATASET_NO = 3;
 % FIRST_FRAME = 175;LAST_FRAME = 205; %3
-%FILE_HEADER = 'CamVid-';
-%FILE_SUFFIX = '.ppm';
+% FILE_HEADER = 'CamVid-';
+% FILE_SUFFIX = '.ppm';
 
 %DATASET_NO = 4;
 %FIRST_FRAME = 648;LAST_FRAME = 660; %4
 %FILE_HEADER = 'CamVid-';
 %FILE_SUFFIX = '.ppm';
 
-% DATASET_NO = 5;
-% FIRST_FRAME = 1;LAST_FRAME = 200; %5
-% FILE_HEADER = 'CamVid-';
-% FILE_SUFFIX = '.ppm';
+DATASET_NO = 5;
+FIRST_FRAME = 1;LAST_FRAME = 200; %5
+FILE_HEADER = 'CamVid-';
+FILE_SUFFIX = '.ppm';
 
 %DATASET_NO = 6;
 %FIRST_FRAME = 70;LAST_FRAME = 90; %6
@@ -81,12 +81,12 @@ BIG_NUMBER = 9999;
 %FILE_HEADER = 'NewCollege-';
 %FILE_SUFFIX = '.jpg';
 
-DATASET_NO = 13;
-FIRST_FRAME = 1;LAST_FRAME = 300; %13
-FILE_HEADER = 'Cold-';
-FILE_SUFFIX = '.jpg';
+% DATASET_NO = 13;
+% FIRST_FRAME = 1;LAST_FRAME = 20; %13
+% FILE_HEADER = 'Cold-';
+% FILE_SUFFIX = '.jpg';
 
-SCALE_DOWN_RATIO = '0.25';
+SCALE_DOWN_RATIO = '0.5';
 
 position_weight = 0.5;%100;
 color_weight = 0.8;%500;
