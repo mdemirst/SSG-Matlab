@@ -14,8 +14,8 @@ end
 P = Hungarian(C);
 
 nr_good_matches = sum(C(P == 1) < tau_m);
-%match_ratio = nr_good_matches/(max(size(N1,1),size(N2,1)));
+match_ratio = nr_good_matches/(max(size(N1,1),size(N2,1)));
 
 %disp(['Match ratio: ', num2str(match_ratio)]);
 % cost metric defined in original paper
-match_ratio = sum(C(find(P)))/min(size(P)) + missing_node_penalty*abs(size(N1,1)-size(N2,1));
+%match_ratio = sum(C(find(P)))/min(size(P)) + missing_node_penalty*abs(size(N1,1)-size(N2,1));

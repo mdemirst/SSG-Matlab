@@ -2,7 +2,7 @@ function plotResults(continuity_map, coherency_scores, places, ...
   nodes_all_frames, inter_matches_all_frames, match_ratios, summary_graphs, ...
   recognized_places)
 
-global FIRST_FRAME DATASET_NO draw_cf_node_radius FILE_HEADER FILE_SUFFIX ...
+global FIRST_FRAME LAST_FRAME DATASET_NO draw_cf_node_radius FILE_HEADER FILE_SUFFIX ...
   NODE_PERCENT_THRES DO_PERF_MEASUREMENT SCALE_DOWN_RATIO;
 
 fig = figure('units','normalized','outerposition',[0 0 1 1]);
@@ -32,10 +32,11 @@ subplot(4,1,2);
 
 plot_height = size(continuity_map,1);
 
+
 %plot coherency scores
-coherency_scores_normalized = normalize_var(coherency_scores,0,plot_height);
-plot(coherency_scores,'color','g','LineWidth',2);
-hold on;
+% coherency_scores_normalized = normalize_var(coherency_scores,0,plot_height);
+% plot(coherency_scores,'color','g','LineWidth',2);
+% hold on;
 
 %plot performance results
 if(DO_PERF_MEASUREMENT && ~isempty(recognized_places))
@@ -45,6 +46,7 @@ end
 
 %plot detected places
 stairs(places(2:end),'color','r','LineWidth',2);
+xlim([0,LAST_FRAME-FIRST_FRAME]);
 hold on;
 
 %plot consecutive frames match ratios
@@ -64,7 +66,7 @@ while(1)
                             '/',FILE_HEADER,zeroPad(FIRST_FRAME+selected_frame_id),...
                             num2str(FIRST_FRAME+selected_frame_id),...
                             FILE_SUFFIX));
-                          
+    
     subplot(4,1,3);
 
     imshow(X1,map1);
@@ -102,10 +104,11 @@ while(1)
     if(size(places,2) < selected_frame_id || places(selected_frame_id) <= 0)
       cla(h3);
     else
+      cla(h3);
       place_id = places(selected_frame_id); 
       place_length = size(find(places == place_id),2);
       if(place_id > 0)
-        for i = 1:size(vertcat(summary_graphs{:,place_id}),1)
+        for i = 1:size(summary_graphs,1)
           avg_node = summary_graphs{i,place_id};
 
           if(~isempty(avg_node) && avg_node{1,1} > NODE_PERCENT_THRES*place_length)

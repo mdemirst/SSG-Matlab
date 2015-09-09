@@ -105,7 +105,7 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
 end
 
 if(DO_PERF_MEASUREMENT)
-  recognized_places = performanceMeasurement(summary_graphs);
+  recognized_places = performanceMeasurement(summary_graphs, places);
 end
 
 plotResults(continuity_map, coherency_scores, places, nodes_all_frames, ...

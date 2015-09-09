@@ -47,7 +47,7 @@ BIG_NUMBER = 9999;
 %FILE_SUFFIX = '.ppm';
 
 % DATASET_NO = 5;
-% FIRST_FRAME = 1;LAST_FRAME = 200; %5
+% FIRST_FRAME = 1;LAST_FRAME = 150; %5
 % FILE_HEADER = 'CamVid-';
 % FILE_SUFFIX = '.ppm';
 
@@ -82,7 +82,7 @@ BIG_NUMBER = 9999;
 %FILE_SUFFIX = '.jpg';
 
 DATASET_NO = 13;
-FIRST_FRAME = 30;LAST_FRAME = 250; %13
+FIRST_FRAME = 30;LAST_FRAME = 500; %13
 FILE_HEADER = 'Cold-';
 FILE_SUFFIX = '.jpg';
 
@@ -103,7 +103,7 @@ draw_cf_match_line_width_b = 5;
 tau_m = 0.02; %cost_thres - node-to-node match threshold in order to be
                %regarded as good match
 
-draw_matches = 0;
+draw_matches = 1;
 draw_match_lines = 0;
 save_drawn_matches = 0;
 draw_indv_node_match_cost = 0;
@@ -113,7 +113,7 @@ coherency_window_lenght = 5;
 unique_nodes_count = 0;
 
 tau_n = 3;
-tau_c = 0.15;
+tau_c = 1.0;
 COHERENCY_SCORE = 7;
 
 TAU_D = 1;
@@ -128,6 +128,6 @@ INDEX_MATCH_RATIO = 6;
 INDEX_DISSIM_SCORE = 7;
 INDEX_I_CURRENT = 8;
 
-NODE_PERCENT_THRES = 0.25;
+NODE_PERCENT_THRES = 0.40;
 
 DO_PERF_MEASUREMENT = 1;
