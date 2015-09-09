@@ -13,7 +13,7 @@ global working_dir exec_dir segmentation_app_filename ...
        TAU_D TAU_F TAU_A TAU_P test_data ...
        SIGMF_A SIGMF_C ...
        INDEX_MATCH_RATIO INDEX_DISSIM_SCORE INDEX_I_CURRENT FILE_HEADER FILE_SUFFIX...
-       NODE_PERCENT_THRES;
+       NODE_PERCENT_THRES DO_PERF_MEASUREMENT;
 
 PAR_SIGMA = '0.7';
 PAR_K = '150';
@@ -35,7 +35,7 @@ BIG_NUMBER = 9999;
 % FIRST_FRAME = 85;LAST_FRAME = 124; %2
 % FILE_HEADER = 'CamVid-';
 % FILE_SUFFIX = '.ppm';
-% 
+
 % DATASET_NO = 3;
 % FIRST_FRAME = 175;LAST_FRAME = 205; %3
 % FILE_HEADER = 'CamVid-';
@@ -46,10 +46,10 @@ BIG_NUMBER = 9999;
 %FILE_HEADER = 'CamVid-';
 %FILE_SUFFIX = '.ppm';
 
-DATASET_NO = 5;
-FIRST_FRAME = 1;LAST_FRAME = 200; %5
-FILE_HEADER = 'CamVid-';
-FILE_SUFFIX = '.ppm';
+% DATASET_NO = 5;
+% FIRST_FRAME = 1;LAST_FRAME = 200; %5
+% FILE_HEADER = 'CamVid-';
+% FILE_SUFFIX = '.ppm';
 
 %DATASET_NO = 6;
 %FIRST_FRAME = 70;LAST_FRAME = 90; %6
@@ -81,12 +81,12 @@ FILE_SUFFIX = '.ppm';
 %FILE_HEADER = 'NewCollege-';
 %FILE_SUFFIX = '.jpg';
 
-% DATASET_NO = 13;
-% FIRST_FRAME = 1;LAST_FRAME = 20; %13
-% FILE_HEADER = 'Cold-';
-% FILE_SUFFIX = '.jpg';
+DATASET_NO = 13;
+FIRST_FRAME = 30;LAST_FRAME = 250; %13
+FILE_HEADER = 'Cold-';
+FILE_SUFFIX = '.jpg';
 
-SCALE_DOWN_RATIO = '0.5';
+SCALE_DOWN_RATIO = 0.5;
 
 position_weight = 0.5;%100;
 color_weight = 0.8;%500;
@@ -100,7 +100,7 @@ missing_node_penalty = 0;
 draw_cf_node_radius = 2*500/300000;
 draw_cf_match_line_width_a = 1.3;
 draw_cf_match_line_width_b = 5;
-tau_m = 0.015; %cost_thres - node-to-node match threshold in order to be
+tau_m = 0.02; %cost_thres - node-to-node match threshold in order to be
                %regarded as good match
 
 draw_matches = 0;
@@ -113,7 +113,7 @@ coherency_window_lenght = 5;
 unique_nodes_count = 0;
 
 tau_n = 3;
-tau_c = 1.0;
+tau_c = 0.15;
 COHERENCY_SCORE = 7;
 
 TAU_D = 1;
@@ -129,3 +129,5 @@ INDEX_DISSIM_SCORE = 7;
 INDEX_I_CURRENT = 8;
 
 NODE_PERCENT_THRES = 0.25;
+
+DO_PERF_MEASUREMENT = 1;

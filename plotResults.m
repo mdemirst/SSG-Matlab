@@ -3,10 +3,10 @@ function plotResults(continuity_map, coherency_scores, places, ...
   recognized_places)
 
 global FIRST_FRAME DATASET_NO draw_cf_node_radius FILE_HEADER FILE_SUFFIX ...
-  NODE_PERCENT_THRES;
+  NODE_PERCENT_THRES DO_PERF_MEASUREMENT SCALE_DOWN_RATIO;
 
 fig = figure('units','normalized','outerposition',[0 0 1 1]);
-subplot(3,1,1);
+subplot(4,1,1);
 
 %mahmut: experimental
 % h = size(continuity_map,1);
@@ -22,17 +22,23 @@ subplot(3,1,1);
 %draw black-white continuity map
 imagesc(continuity_map);
 colormap([1 1 1; 0 0 0]);
+axis xy;
 hold on;
+
+dcm_obj = datacursormode(fig);
+datacursormode on;
+
+subplot(4,1,2);
 
 plot_height = size(continuity_map,1);
 
 %plot coherency scores
 coherency_scores_normalized = normalize_var(coherency_scores,0,plot_height);
-plot(coherency_scores_normalized,'color','g','LineWidth',2);
+plot(coherency_scores,'color','g','LineWidth',2);
 hold on;
 
 %plot performance results
-if(~isempty(recognized_places))
+if(DO_PERF_MEASUREMENT && ~isempty(recognized_places))
   stairs(recognized_places(1,:), 'color','b','LineWidth',5);
   hold on;
 end
@@ -44,10 +50,6 @@ hold on;
 %plot consecutive frames match ratios
 match_ratios = normalize_var(match_ratios,0,plot_height);
 %plot(match_ratios,'color','b','LineWidth',2);
-axis xy;
-
-dcm_obj = datacursormode(fig);
-datacursormode on;
 
 
 while(1)
@@ -63,9 +65,10 @@ while(1)
                             num2str(FIRST_FRAME+selected_frame_id),...
                             FILE_SUFFIX));
                           
-    subplot(3,1,2);
+    subplot(4,1,3);
 
     imshow(X1,map1);
+    set(gca,'Ydir','reverse');
     hold on;
                   
     if(continuity_map(selected_unique_node_id,selected_frame_id) == 1)
@@ -74,23 +77,23 @@ while(1)
       selected_node = nodes_all_frames{selected_frame_id}(node_id,:);
 
 
-      nodeRadius = selected_node{1,2}(4)*draw_cf_node_radius;
+      nodeRadius = selected_node{1,2}(4)*draw_cf_node_radius*6;
       colorR = selected_node{1,2}(1)/255;
       colorG = selected_node{1,2}(2)/255;
       colorB = selected_node{1,2}(3)/255;
         
       
-      rectangle('Position', [selected_node{1,1}-[nodeRadius/2.0, nodeRadius/2.0],nodeRadius,nodeRadius],...
+      rectangle('Position', [selected_node{1,1}/SCALE_DOWN_RATIO-[nodeRadius/2.0, nodeRadius/2.0],nodeRadius,nodeRadius],...
                 'Curvature', [1,1],...
                 'FaceColor', [1,0,0]);
       hold on;
     end
     
     %plot corresponding summary graph
-    h3 = subplot(3,1,3);
+    h3 = subplot(4,1,4);
     axis equal;
     set(gcf,'Visible','off');
-    set(gca,'Ydir','reverse')
+    set(gca,'Ydir','reverse');
     set(gca,'XTick',[])
     set(gca,'YTick',[])
     set(gca,'XColor',[1,1,1]);

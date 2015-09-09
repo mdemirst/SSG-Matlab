@@ -26,12 +26,13 @@ inter_matches_all_frames = cell(1,LAST_FRAME-FIRST_FRAME);
 unique_nodes = [];
 match_ratios = [];
 summary_graphs = [];
+recognized_places = [];
 
 args1 = strcat({' '},PAR_SIGMA,{' '},PAR_K,{' '},PAR_MIN_SIZE,{' '},...
                'Datasets/',num2str(DATASET_NO),...
                '/',FILE_HEADER,zeroPad(FIRST_FRAME),...
                num2str(FIRST_FRAME),...
-               FILE_SUFFIX, {' '}, 'segment1', {' '}, SCALE_DOWN_RATIO);
+               FILE_SUFFIX, {' '}, 'segment1', {' '}, num2str(SCALE_DOWN_RATIO));
 system([exec_dir segmentation_app_filename args1{1}]);
 sample_image = imread('segment1.jpg');
 [img_height, img_width, img_dim] = size(sample_image);
@@ -59,7 +60,7 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
                      'Datasets/',num2str(DATASET_NO),...
                      '/',FILE_HEADER,zeroPad(frame_id+1),...
                      num2str(frame_id+1),...
-                     FILE_SUFFIX, {' '}, 'segment2', {' '}, SCALE_DOWN_RATIO);
+                     FILE_SUFFIX, {' '}, 'segment2', {' '}, num2str(SCALE_DOWN_RATIO));
                
     %run segmentation algorithm implemented on cpp
     %cpp file produces segment1_graph.txt and segment2_graph.txt
@@ -103,7 +104,9 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     match_ratios(1,frame_id-FIRST_FRAME+1) = match_ratio;
 end
 
-recognized_places = performanceMeasurement(summary_graphs);
+if(DO_PERF_MEASUREMENT)
+  recognized_places = performanceMeasurement(summary_graphs);
+end
 
 plotResults(continuity_map, coherency_scores, places, nodes_all_frames, ...
             inter_matches_all_frames, match_ratios, summary_graphs, ...
