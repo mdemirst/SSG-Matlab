@@ -96,6 +96,9 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     movefile('segment2.jpg','segment1.jpg');
     
     places = detectPlace(coherency_scores,places);
+    if(frame_id == LAST_FRAME-1)
+      places(1,end) = 0;
+    end
     
     summary_graphs = updateSummaryGraph(places, coherency_window, summary_graphs);
     

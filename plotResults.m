@@ -53,6 +53,9 @@ hold on;
 match_ratios = normalize_var(match_ratios,0,plot_height);
 %plot(match_ratios,'color','b','LineWidth',2);
 
+correctly_recognized = size(find(recognized_places(1,1:size(places,2)) == places(1,:) & places(1,:) ~= 0),2);
+correctly_recognized = correctly_recognized / size( find(places(1,:) ~= 0),2);
+disp(['Recognition rate is: ', num2str(correctly_recognized)]); 
 
 while(1)
     %pause
