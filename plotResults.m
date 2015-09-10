@@ -3,10 +3,10 @@ function plotResults(continuity_map, coherency_scores, places, ...
   recognized_places)
 
 global FIRST_FRAME LAST_FRAME DATASET_NO draw_cf_node_radius FILE_HEADER FILE_SUFFIX ...
-  NODE_PERCENT_THRES DO_PERF_MEASUREMENT SCALE_DOWN_RATIO;
+  NODE_PERCENT_THRES DO_PERF_MEASUREMENT SCALE_DOWN_RATIO TEST_FOLDER;
 
 fig = figure('units','normalized','outerposition',[0 0 1 1]);
-subplot(4,1,1);
+subplot(5,1,1);
 
 %mahmut: experimental
 % h = size(continuity_map,1);
@@ -28,7 +28,7 @@ hold on;
 dcm_obj = datacursormode(fig);
 datacursormode on;
 
-subplot(4,1,2);
+subplot(5,1,2);
 
 plot_height = size(continuity_map,1);
 
@@ -65,15 +65,27 @@ while(1)
     selected_frame_id = floor(c_info.Position(1));
     selected_unique_node_id = floor(c_info.Position(2));
     
-    [X1,map1]=imread(strcat('Datasets/',num2str(DATASET_NO),...
+    [X1,map1]= imread(strcat('Datasets/',num2str(DATASET_NO),...
+                            '/',TEST_FOLDER, '/', FILE_HEADER,zeroPad(FIRST_FRAME+selected_frame_id),...
+                            num2str(FIRST_FRAME+selected_frame_id),...
+                            '.jpeg'));
+    
+    subplot(5,1,3);
+
+    imshow(X1,map1);
+    set(gca,'Ydir','reverse');
+    
+             
+    [X2,map2]= imread(strcat('Datasets/',num2str(DATASET_NO),...
                             '/',FILE_HEADER,zeroPad(FIRST_FRAME+selected_frame_id),...
                             num2str(FIRST_FRAME+selected_frame_id),...
                             FILE_SUFFIX));
     
-    subplot(4,1,3);
+    subplot(5,1,4);
 
-    imshow(X1,map1);
+    imshow(X2,map2);
     set(gca,'Ydir','reverse');
+    
     hold on;
                   
     if(continuity_map(selected_unique_node_id,selected_frame_id) == 1)
@@ -95,7 +107,7 @@ while(1)
     end
     
     %plot corresponding summary graph
-    h3 = subplot(4,1,4);
+    h3 = subplot(5,1,5);
     axis equal;
     set(gcf,'Visible','off');
     set(gca,'Ydir','reverse');

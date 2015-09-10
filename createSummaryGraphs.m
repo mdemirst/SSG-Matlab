@@ -33,13 +33,15 @@ args1 = strcat({' '},PAR_SIGMA,{' '},PAR_K,{' '},PAR_MIN_SIZE,{' '},...
                '/',FILE_HEADER,zeroPad(FIRST_FRAME),...
                num2str(FIRST_FRAME),...
                FILE_SUFFIX, {' '}, 'segment1', {' '}, num2str(SCALE_DOWN_RATIO));
-system([exec_dir segmentation_app_filename args1{1}]);
+[status,cmdout ] = system([exec_dir segmentation_app_filename args1{1}]);
 sample_image = imread('segment1.jpg');
 [img_height, img_width, img_dim] = size(sample_image);
 img_area = img_height*img_width;
 
 
 for frame_id = FIRST_FRAME:LAST_FRAME-1
+  
+    disp(['Processing ', num2str(frame_id-FIRST_FRAME+1), '. frame']);
     
     %arg#1: sigma - smoothing before segmentation
     %arg#2: k - value for threshold function 
@@ -65,7 +67,7 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     %run segmentation algorithm implemented on cpp
     %cpp file produces segment1_graph.txt and segment2_graph.txt
     %on the local directory
-    system([exec_dir segmentation_app_filename args2{1}]);
+    [status,cmdout ] = system([exec_dir segmentation_app_filename args2{1}]);
     
     %reads produced txt files and creates node signatures
     [N1, E1, S1] = readGraphFromFile([working_dir 'segment1_graph.txt']);
@@ -107,10 +109,12 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     match_ratios(1,frame_id-FIRST_FRAME+1) = match_ratio;
 end
 
+disp('Performance Measurement');
 if(DO_PERF_MEASUREMENT)
   recognized_places = performanceMeasurement(summary_graphs, places);
 end
 
+disp('Plotting Results');
 plotResults(continuity_map, coherency_scores, places, nodes_all_frames, ...
             inter_matches_all_frames, match_ratios, summary_graphs, ...
             recognized_places);

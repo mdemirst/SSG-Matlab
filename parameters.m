@@ -1,5 +1,5 @@
 global working_dir exec_dir segmentation_app_filename ...
-       DATASET_NO FIRST_FRAME LAST_FRAME ...
+       DATASET_NO FIRST_FRAME LAST_FRAME TEST_FOLDER ...
        PAR_SIGMA PAR_K PAR_MIN_SIZE ...
        BIG_NUMBER SCALE_DOWN_RATIO ...
        img_height img_width img_area ...
@@ -22,7 +22,7 @@ PAR_MIN_SIZE = '1000';
 exec_dir = '/home/isl-mahmut-ubuntu/Code/GraphSegmentation/Release/';
 working_dir = '/media/isl-mahmut-ubuntu/YEDEK/REPO/SegmentsSummaryGraphs/';
 segmentation_app_filename = '"GraphSegmentation"';
-
+TEST_FOLDER = 'Test';
 
 BIG_NUMBER = 9999;
 
@@ -46,10 +46,10 @@ BIG_NUMBER = 9999;
 %FILE_HEADER = 'CamVid-';
 %FILE_SUFFIX = '.ppm';
 
-DATASET_NO = 5;
-FIRST_FRAME = 1;LAST_FRAME = 150; %5
-FILE_HEADER = 'CamVid-';
-FILE_SUFFIX = '.ppm';
+% DATASET_NO = 5;
+% FIRST_FRAME = 1;LAST_FRAME = 150; %5
+% FILE_HEADER = 'CamVid-';
+% FILE_SUFFIX = '.ppm';
 
 %DATASET_NO = 6;
 %FIRST_FRAME = 70;LAST_FRAME = 90; %6
@@ -81,8 +81,13 @@ FILE_SUFFIX = '.ppm';
 %FILE_HEADER = 'NewCollege-';
 %FILE_SUFFIX = '.jpg';
 
-% DATASET_NO = 13;
-% FIRST_FRAME = 30;LAST_FRAME = 500; %13
+DATASET_NO = 13;
+FIRST_FRAME = 1;LAST_FRAME = 200; %13
+FILE_HEADER = 'Cold-';
+FILE_SUFFIX = '.jpg';
+
+% DATASET_NO = 14;
+% FIRST_FRAME = 1;LAST_FRAME = 200; %14
 % FILE_HEADER = 'Cold-';
 % FILE_SUFFIX = '.jpg';
 
