@@ -5,8 +5,28 @@ function plotResults(continuity_map, coherency_scores, places, ...
 global FIRST_FRAME LAST_FRAME DATASET_NO draw_cf_node_radius FILE_HEADER FILE_SUFFIX ...
   NODE_PERCENT_THRES DO_PERF_MEASUREMENT SCALE_DOWN_RATIO TEST_FOLDER;
 
+figure;
+
+locs = readDatasetLocations(DATASET_NO);
+
+%first plot ground truth labels
+for i = 1:max(locs(3,:))
+  base_points = locs(:,locs(3,:) == i);
+  plot(base_points(1,:),base_points(2,:),'LineWidth',10,'Color',[0,i/max(locs(3,:)),0]);
+  hold on;
+end
+
+%then plot detected places
+place_points = locs(:,FIRST_FRAME - 1 + find(places > 0));
+trans_points = locs(:,FIRST_FRAME - 1 + find(places == 0));
+
+plot(place_points(1,:),place_points(2,:),'*','Color','r');
+hold on;
+plot(trans_points(1,:),trans_points(2,:),'*','Color','b');
+
+
 fig = figure('units','normalized','outerposition',[0 0 1 1]);
-subplot(5,1,1);
+subplot(4,1,1);
 
 %mahmut: experimental
 % h = size(continuity_map,1);
@@ -28,7 +48,8 @@ hold on;
 dcm_obj = datacursormode(fig);
 datacursormode on;
 
-subplot(5,1,2);
+
+subplot(4,1,2);
 
 plot_height = size(continuity_map,1);
 
@@ -40,7 +61,7 @@ plot_height = size(continuity_map,1);
 
 %plot performance results
 if(DO_PERF_MEASUREMENT && ~isempty(recognized_places))
-  stairs(recognized_places(1,:), 'color','b','LineWidth',5);
+  plot(recognized_places(1,:),'*', 'color','b');
   hold on;
 end
 
@@ -53,9 +74,11 @@ hold on;
 match_ratios = normalize_var(match_ratios,0,plot_height);
 %plot(match_ratios,'color','b','LineWidth',2);
 
-correctly_recognized = size(find(recognized_places(1,1:size(places,2)) == places(1,:) & places(1,:) ~= 0),2);
-correctly_recognized = correctly_recognized / size( find(places(1,:) ~= 0),2);
-disp(['Recognition rate is: ', num2str(correctly_recognized)]); 
+if(DO_PERF_MEASUREMENT && ~isempty(recognized_places))
+  correctly_recognized = size(find(recognized_places(1,1:size(places,2)) == places(1,:) & places(1,:) ~= 0),2);
+  correctly_recognized = correctly_recognized / size( find(places(1,:) ~= 0),2);
+  disp(['Recognition rate is: ', num2str(correctly_recognized)]); 
+end
 
 while(1)
     %pause
@@ -64,24 +87,13 @@ while(1)
     
     selected_frame_id = floor(c_info.Position(1));
     selected_unique_node_id = floor(c_info.Position(2));
-    
-    [X1,map1]= imread(strcat('Datasets/',num2str(DATASET_NO),...
-                            '/',TEST_FOLDER, '/', FILE_HEADER,zeroPad(FIRST_FRAME+selected_frame_id),...
-                            num2str(FIRST_FRAME+selected_frame_id),...
-                            '.jpeg'));
-    
-    subplot(5,1,3);
-
-    imshow(X1,map1);
-    set(gca,'Ydir','reverse');
-    
              
     [X2,map2]= imread(strcat('Datasets/',num2str(DATASET_NO),...
                             '/',FILE_HEADER,zeroPad(FIRST_FRAME+selected_frame_id),...
                             num2str(FIRST_FRAME+selected_frame_id),...
                             FILE_SUFFIX));
     
-    subplot(5,1,4);
+    subplot(4,1,3);
 
     imshow(X2,map2);
     set(gca,'Ydir','reverse');
@@ -107,7 +119,7 @@ while(1)
     end
     
     %plot corresponding summary graph
-    h3 = subplot(5,1,5);
+    h3 = subplot(4,1,4);
     axis equal;
     set(gcf,'Visible','off');
     set(gca,'Ydir','reverse');

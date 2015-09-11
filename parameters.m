@@ -22,7 +22,7 @@ PAR_MIN_SIZE = '1000';
 exec_dir = '/home/isl-mahmut-ubuntu/Code/GraphSegmentation/Release/';
 working_dir = '/media/isl-mahmut-ubuntu/YEDEK/REPO/SegmentsSummaryGraphs/';
 segmentation_app_filename = '"GraphSegmentation"';
-TEST_FOLDER = 'Test';
+TEST_FOLDER = 'TestImages';
 
 BIG_NUMBER = 9999;
 
@@ -81,15 +81,20 @@ BIG_NUMBER = 9999;
 %FILE_HEADER = 'NewCollege-';
 %FILE_SUFFIX = '.jpg';
 
-DATASET_NO = 13;
-FIRST_FRAME = 1;LAST_FRAME = 200; %13
-FILE_HEADER = 'Cold-';
-FILE_SUFFIX = '.jpg';
-
-% DATASET_NO = 14;
-% FIRST_FRAME = 1;LAST_FRAME = 200; %14
+% DATASET_NO = 13;
+% FIRST_FRAME = 1;LAST_FRAME = 500; %13
 % FILE_HEADER = 'Cold-';
 % FILE_SUFFIX = '.jpg';
+
+% DATASET_NO = 14;
+% FIRST_FRAME = 1;LAST_FRAME = 500; %14
+% FILE_HEADER = 'Cold-';
+% FILE_SUFFIX = '.jpg';
+
+DATASET_NO = 16;
+FIRST_FRAME = 50;LAST_FRAME = 300; %16
+FILE_HEADER = 'Cold-';
+FILE_SUFFIX = '.jpg';
 
 SCALE_DOWN_RATIO = 0.5;
 
@@ -108,7 +113,7 @@ draw_cf_match_line_width_b = 5;
 tau_m = 0.02; %cost_thres - node-to-node match threshold in order to be
                %regarded as good match
 
-draw_matches = 0;
+draw_matches = 1;
 draw_match_lines = 0;
 save_drawn_matches = 0;
 draw_indv_node_match_cost = 0;
