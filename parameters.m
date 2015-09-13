@@ -17,7 +17,7 @@ global working_dir exec_dir segmentation_app_filename ...
 
 PAR_SIGMA = '0.7';
 PAR_K = '150';
-PAR_MIN_SIZE = '1000';
+PAR_MIN_SIZE = '250';
 
 exec_dir = '/home/isl-mahmut-ubuntu/Code/GraphSegmentation/Release/';
 working_dir = '/media/isl-mahmut-ubuntu/YEDEK/REPO/SegmentsSummaryGraphs/';
@@ -82,21 +82,21 @@ BIG_NUMBER = 9999;
 %FILE_SUFFIX = '.jpg';
 
 % DATASET_NO = 13;
-% FIRST_FRAME = 1;LAST_FRAME = 500; %13
+% FIRST_FRAME = 220;LAST_FRAME = 1200; %13
 % FILE_HEADER = 'Cold-';
 % FILE_SUFFIX = '.jpg';
 
-% DATASET_NO = 14;
-% FIRST_FRAME = 1;LAST_FRAME = 500; %14
-% FILE_HEADER = 'Cold-';
-% FILE_SUFFIX = '.jpg';
-
-DATASET_NO = 16;
-FIRST_FRAME = 50;LAST_FRAME = 300; %16
+DATASET_NO = 14;
+FIRST_FRAME = 160;LAST_FRAME = 1060; %14
 FILE_HEADER = 'Cold-';
 FILE_SUFFIX = '.jpg';
 
-SCALE_DOWN_RATIO = 0.5;
+% DATASET_NO = 16;
+% FIRST_FRAME = 50;LAST_FRAME = 300; %16
+% FILE_HEADER = 'Cold-';
+% FILE_SUFFIX = '.jpg';
+
+SCALE_DOWN_RATIO = 0.25;
 
 position_weight = 0.5;%100;
 color_weight = 0.8;%500;
@@ -113,17 +113,17 @@ draw_cf_match_line_width_b = 5;
 tau_m = 0.02; %cost_thres - node-to-node match threshold in order to be
                %regarded as good match
 
-draw_matches = 1;
+draw_matches = 0;
 draw_match_lines = 0;
 save_drawn_matches = 0;
 draw_indv_node_match_cost = 0;
 
-coherency_window_lenght = 5;
+coherency_window_lenght = 11;
 
 unique_nodes_count = 0;
 
 tau_n = 3;
-tau_c = 1.0;
+tau_c = 1.5;
 COHERENCY_SCORE = 7;
 
 TAU_D = 1;

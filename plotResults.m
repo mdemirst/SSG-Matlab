@@ -10,20 +10,27 @@ figure;
 locs = readDatasetLocations(DATASET_NO);
 
 %first plot ground truth labels
-for i = 1:max(locs(3,:))
-  base_points = locs(:,locs(3,:) == i);
-  plot(base_points(1,:),base_points(2,:),'LineWidth',10,'Color',[0,i/max(locs(3,:)),0]);
+% for i = 1:max(locs(3,:))
+%   base_points = locs(:,locs(3,:) == i);
+%   plot(base_points(1,:),base_points(2,:),'LineWidth',10,'Color',[0,i/max(locs(3,:)),0]);
+%   hold on;
+% end
+
+%plot places
+for i = 1:max(places)
+  place_points = locs(:,FIRST_FRAME - 1 + find(places == i));
+  plot(place_points(1,:),place_points(2,:),'Color','r','LineWidth',10);
   hold on;
+  if(i < max(places))
+    trans_points = locs(:,FIRST_FRAME  + find(places == i,1,'last'):...
+                          FIRST_FRAME - 2 + find(places == i+1,1,'first'));
+    plot(trans_points(1,:),trans_points(2,:),'Color','b','LineWidth',10);
+    hold on;
+  end
 end
+axis equal;
 
-%then plot detected places
-place_points = locs(:,FIRST_FRAME - 1 + find(places > 0));
-trans_points = locs(:,FIRST_FRAME - 1 + find(places == 0));
-
-plot(place_points(1,:),place_points(2,:),'*','Color','r');
-hold on;
-plot(trans_points(1,:),trans_points(2,:),'*','Color','b');
-
+return;
 
 fig = figure('units','normalized','outerposition',[0 0 1 1]);
 subplot(4,1,1);

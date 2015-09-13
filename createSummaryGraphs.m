@@ -109,6 +109,13 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     match_ratios(1,frame_id-FIRST_FRAME+1) = match_ratio;
 end
 
+save(strcat('Results/coherency_window_',num2str(DATASET_NO),'_',...
+     num2str(FIRST_FRAME),'_',num2str(LAST_FRAME),'.mat'),'coherency_window');
+save(strcat('Results/places_',num2str(DATASET_NO),'_',...
+     num2str(FIRST_FRAME),'_',num2str(LAST_FRAME),'.mat'),'places');
+save(strcat('Results/recognized_places_',num2str(DATASET_NO),'_',...
+     num2str(FIRST_FRAME),'_',num2str(LAST_FRAME),'.mat'),'recognized_places');
+
 disp('Performance Measurement');
 if(DO_PERF_MEASUREMENT)
   recognized_places = performanceMeasurement(summary_graphs, places);
@@ -119,4 +126,4 @@ plotResults(continuity_map, coherency_scores, places, nodes_all_frames, ...
             inter_matches_all_frames, match_ratios, summary_graphs, ...
             recognized_places);
 
-save('coherency_window.mat','coherency_window');
+
