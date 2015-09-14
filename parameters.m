@@ -17,7 +17,7 @@ global working_dir exec_dir segmentation_app_filename ...
 
 PAR_SIGMA = '0.7';
 PAR_K = '150';
-PAR_MIN_SIZE = '250';
+PAR_MIN_SIZE = '2000';
 
 exec_dir = '/home/isl-mahmut-ubuntu/Code/GraphSegmentation/Release/';
 working_dir = '/media/isl-mahmut-ubuntu/YEDEK/REPO/SegmentsSummaryGraphs/';
@@ -82,12 +82,12 @@ BIG_NUMBER = 9999;
 %FILE_SUFFIX = '.jpg';
 
 % DATASET_NO = 13;
-% FIRST_FRAME = 220;LAST_FRAME = 1200; %13
+% FIRST_FRAME = 1170;LAST_FRAME = 1200; %13
 % FILE_HEADER = 'Cold-';
 % FILE_SUFFIX = '.jpg';
 
 DATASET_NO = 14;
-FIRST_FRAME = 160;LAST_FRAME = 1060; %14
+FIRST_FRAME = 1030;LAST_FRAME = 1060; %14
 FILE_HEADER = 'Cold-';
 FILE_SUFFIX = '.jpg';
 
@@ -96,12 +96,17 @@ FILE_SUFFIX = '.jpg';
 % FILE_HEADER = 'Cold-';
 % FILE_SUFFIX = '.jpg';
 
-SCALE_DOWN_RATIO = 0.25;
+% DATASET_NO = 17;
+% FIRST_FRAME = 1;LAST_FRAME = 1632; %14
+% FILE_HEADER = 'Cold-';
+% FILE_SUFFIX = '.jpg';
 
-position_weight = 0.5;%100;
-color_weight = 0.8;%500;
+SCALE_DOWN_RATIO = 0.5;
+
+position_weight = 0.8;%100;
+color_weight = 0.5;%500;
 edge_weight = 0;%10;
-area_weight = 0.5;%10;
+area_weight = 0.7;%10;
 missing_edge_weight = 0;%1;
 use_edge_permutation = 0;
 
@@ -122,8 +127,8 @@ coherency_window_lenght = 11;
 
 unique_nodes_count = 0;
 
-tau_n = 3;
-tau_c = 1.5;
+tau_n = 8;
+tau_c = 1.2;
 COHERENCY_SCORE = 7;
 
 TAU_D = 1;
@@ -138,6 +143,6 @@ INDEX_MATCH_RATIO = 6;
 INDEX_DISSIM_SCORE = 7;
 INDEX_I_CURRENT = 8;
 
-NODE_PERCENT_THRES = 0.4;
+NODE_PERCENT_THRES = 0.5;
 
 DO_PERF_MEASUREMENT = 1;

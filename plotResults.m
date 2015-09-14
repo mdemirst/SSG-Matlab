@@ -30,8 +30,6 @@ for i = 1:max(places)
 end
 axis equal;
 
-return;
-
 fig = figure('units','normalized','outerposition',[0 0 1 1]);
 subplot(4,1,1);
 
@@ -119,9 +117,9 @@ while(1)
       colorB = selected_node{1,2}(3)/255;
         
       
-      rectangle('Position', [selected_node{1,1}/SCALE_DOWN_RATIO-[nodeRadius/2.0, nodeRadius/2.0],nodeRadius,nodeRadius],...
-                'Curvature', [1,1],...
-                'FaceColor', [1,0,0]);
+%       rectangle('Position', [selected_node{1,1}/SCALE_DOWN_RATIO-[nodeRadius/2.0, nodeRadius/2.0],nodeRadius,nodeRadius],...
+%                 'Curvature', [1,1],...
+%                 'FaceColor', [1,0,0]);
       hold on;
     end
     
