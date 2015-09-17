@@ -17,7 +17,7 @@ global working_dir exec_dir segmentation_app_filename ...
 
 PAR_SIGMA = '0.7';
 PAR_K = '150';
-PAR_MIN_SIZE = '2000';
+PAR_MIN_SIZE = '1000';
 
 exec_dir = '/home/isl-mahmut-ubuntu/Code/GraphSegmentation/Release/';
 working_dir = '/media/isl-mahmut-ubuntu/YEDEK/REPO/SegmentsSummaryGraphs/';
@@ -32,7 +32,7 @@ BIG_NUMBER = 9999;
 %FILE_SUFFIX = '.ppm';
 
 % DATASET_NO = 2;
-% FIRST_FRAME = 85;LAST_FRAME = 124; %2
+% FIRST_FRAME = 100;LAST_FRAME = 120; %2
 % FILE_HEADER = 'CamVid-';
 % FILE_SUFFIX = '.ppm';
 
@@ -78,23 +78,23 @@ BIG_NUMBER = 9999;
 
 % DATASET_NO = 12;
 % FIRST_FRAME = 300;LAST_FRAME = 400; %12
-%FILE_HEADER = 'NewCollege-';
-%FILE_SUFFIX = '.jpg';
+% FILE_HEADER = 'NewCollege-';
+% FILE_SUFFIX = '.jpg';
 
 % DATASET_NO = 13;
-% FIRST_FRAME = 1170;LAST_FRAME = 1200; %13
+% FIRST_FRAME = 200;LAST_FRAME = 500; %13
 % FILE_HEADER = 'Cold-';
 % FILE_SUFFIX = '.jpg';
 
-DATASET_NO = 14;
-FIRST_FRAME = 1030;LAST_FRAME = 1060; %14
+% DATASET_NO = 14;
+% FIRST_FRAME = 1030;LAST_FRAME = 1060; %14
+% FILE_HEADER = 'Cold-';
+% FILE_SUFFIX = '.jpg';
+
+DATASET_NO = 16;
+FIRST_FRAME = 400;LAST_FRAME = 900; %16
 FILE_HEADER = 'Cold-';
 FILE_SUFFIX = '.jpg';
-
-% DATASET_NO = 16;
-% FIRST_FRAME = 50;LAST_FRAME = 300; %16
-% FILE_HEADER = 'Cold-';
-% FILE_SUFFIX = '.jpg';
 
 % DATASET_NO = 17;
 % FIRST_FRAME = 1;LAST_FRAME = 1632; %14
@@ -123,11 +123,11 @@ draw_match_lines = 0;
 save_drawn_matches = 0;
 draw_indv_node_match_cost = 0;
 
-coherency_window_lenght = 11;
+coherency_window_lenght = 7;
 
 unique_nodes_count = 0;
 
-tau_n = 8;
+tau_n = 6;
 tau_c = 1.2;
 COHERENCY_SCORE = 7;
 
@@ -143,6 +143,6 @@ INDEX_MATCH_RATIO = 6;
 INDEX_DISSIM_SCORE = 7;
 INDEX_I_CURRENT = 8;
 
-NODE_PERCENT_THRES = 0.5;
+NODE_PERCENT_THRES = 0.2;
 
 DO_PERF_MEASUREMENT = 1;

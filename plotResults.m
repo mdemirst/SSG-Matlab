@@ -5,33 +5,33 @@ function plotResults(continuity_map, coherency_scores, places, ...
 global FIRST_FRAME LAST_FRAME DATASET_NO draw_cf_node_radius FILE_HEADER FILE_SUFFIX ...
   NODE_PERCENT_THRES DO_PERF_MEASUREMENT SCALE_DOWN_RATIO TEST_FOLDER;
 
-figure;
-
-locs = readDatasetLocations(DATASET_NO);
-
-%first plot ground truth labels
-% for i = 1:max(locs(3,:))
-%   base_points = locs(:,locs(3,:) == i);
-%   plot(base_points(1,:),base_points(2,:),'LineWidth',10,'Color',[0,i/max(locs(3,:)),0]);
+% figure;
+% 
+% locs = readDatasetLocations(DATASET_NO);
+% 
+% %first plot ground truth labels
+% % for i = 1:max(locs(3,:))
+% %   base_points = locs(:,locs(3,:) == i);
+% %   plot(base_points(1,:),base_points(2,:),'LineWidth',10,'Color',[0,i/max(locs(3,:)),0]);
+% %   hold on;
+% % end
+% 
+% %plot places
+% for i = 1:max(places)
+%   place_points = locs(:,FIRST_FRAME - 1 + find(places == i));
+%   plot(place_points(1,:),place_points(2,:),'Color','r','LineWidth',10);
 %   hold on;
+%   if(i < max(places))
+%     trans_points = locs(:,FIRST_FRAME  + find(places == i,1,'last'):...
+%                           FIRST_FRAME - 2 + find(places == i+1,1,'first'));
+%     plot(trans_points(1,:),trans_points(2,:),'Color','b','LineWidth',10);
+%     hold on;
+%   end
 % end
-
-%plot places
-for i = 1:max(places)
-  place_points = locs(:,FIRST_FRAME - 1 + find(places == i));
-  plot(place_points(1,:),place_points(2,:),'Color','r','LineWidth',10);
-  hold on;
-  if(i < max(places))
-    trans_points = locs(:,FIRST_FRAME  + find(places == i,1,'last'):...
-                          FIRST_FRAME - 2 + find(places == i+1,1,'first'));
-    plot(trans_points(1,:),trans_points(2,:),'Color','b','LineWidth',10);
-    hold on;
-  end
-end
-axis equal;
+% axis equal;
 
 fig = figure('units','normalized','outerposition',[0 0 1 1]);
-subplot(4,1,1);
+
 
 %mahmut: experimental
 % h = size(continuity_map,1);
@@ -47,6 +47,8 @@ subplot(4,1,1);
 %draw black-white continuity map
 imagesc(continuity_map);
 colormap([1 1 1; 0 0 0]);
+ylabel('Node #');
+xlabel('Base points');
 axis xy;
 hold on;
 
@@ -56,6 +58,8 @@ datacursormode on;
 
 subplot(4,1,2);
 
+figure;
+
 plot_height = size(continuity_map,1);
 
 
@@ -64,24 +68,59 @@ plot_height = size(continuity_map,1);
 % plot(coherency_scores,'color','g','LineWidth',2);
 % hold on;
 
-%plot performance results
-if(DO_PERF_MEASUREMENT && ~isempty(recognized_places))
-  plot(recognized_places(1,:),'*', 'color','b');
-  hold on;
-end
-
 %plot detected places
-stairs(places(2:end),'color','r','LineWidth',2);
+stairs(places(2:end),'color','r','LineWidth',1);
 xlim([0,LAST_FRAME-FIRST_FRAME]);
 hold on;
+
+%plot performance results
+if(DO_PERF_MEASUREMENT && ~isempty(recognized_places))
+  ids = find(recognized_places(1,:) ~= 0);
+  
+  for i = 1:size(ids,2)
+    if(ids(i) < size(places,2))
+    if(recognized_places(1,ids(i)) == places(1,ids(i)))
+      plot(ids(i),recognized_places(1,ids(i)),'+','color','b','LineWidth',1);
+      hold on;
+    else
+      plot(ids(i),recognized_places(1,ids(i)),'+','color','r','LineWidth',1);
+      hold on;
+    end
+    end
+  end
+  %plot(ids,recognized_places(1,ids),'*','color','b');
+  %plot(recognized_places(1,:),'*', 'color','b');
+  hold on;
+end
+ylabel('Place #');
+xlabel('Base Points');
+
 
 %plot consecutive frames match ratios
 match_ratios = normalize_var(match_ratios,0,plot_height);
 %plot(match_ratios,'color','b','LineWidth',2);
 
 if(DO_PERF_MEASUREMENT && ~isempty(recognized_places))
-  correctly_recognized = size(find(recognized_places(1,1:size(places,2)) == places(1,:) & places(1,:) ~= 0),2);
-  correctly_recognized = correctly_recognized / size( find(places(1,:) ~= 0),2);
+  recognized_places = recognized_places(1,1:size(places,2));
+  recognized_places_ids = find(recognized_places);
+  filtered_places = places(recognized_places_ids);
+  filtered_recognized = recognized_places(recognized_places_ids);
+  
+  conf_matrix = zeros(max(filtered_places),max(filtered_places));
+  for i = 1:max(filtered_places)
+    for j = 1:max(filtered_places)
+      actual_places_ids = find(filtered_places == i);
+      predicted_places_ids = find(filtered_recognized(actual_places_ids)==j);
+      conf_matrix(i,j) = size(predicted_places_ids,2)/size(actual_places_ids,2);
+    end
+  end
+  
+  plotConfMatrix(conf_matrix);
+  
+  correctly_recognized = size(find(filtered_places == filtered_recognized),2) / size(find(filtered_places~=0),2);
+  
+  %correctly_recognized = size(find(recognized_places(1,1:size(places,2)) == places(1,:) & places(1,:) ~= 0),2);
+  %correctly_recognized = correctly_recognized / size( find(recognized_places(1,:) ~= 0),2);
   disp(['Recognition rate is: ', num2str(correctly_recognized)]); 
 end
 
