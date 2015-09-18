@@ -1,7 +1,7 @@
 function locs = readDatasetLocations(dataset_no)
-
+global GT_PLACES_FILE;
 locs = [];
-fid = fopen(strcat(['Datasets/',num2str(dataset_no),'/places.lst']));
+fid = fopen(strcat(['Datasets/',num2str(dataset_no),'/', GT_PLACES_FILE]));
 
 nr_places = 0;
 

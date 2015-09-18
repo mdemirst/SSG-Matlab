@@ -1,4 +1,6 @@
 function exportTestImages(folder_name)
+% extracts test images from a given dataset folder
+% test images then erased from dataset images
 FREQ = 5;
 TEST_FOLDER = 'TestImages';
 FILE_PREFIX = 'Cold-';

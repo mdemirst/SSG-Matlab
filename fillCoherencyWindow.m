@@ -5,7 +5,7 @@ function [coherency_window,continuity_map,coherency_scores, I_current, unique_no
 
 global FIRST_FRAME BIG_NUMBER coherency_window_lenght ...
        unique_nodes_count tau_m img_area ...
-       TAU_D TAU_F TAU_A TAU_P test_data ...
+       TAU_D TAU_F TAU_A TAU_P ...
        SIGMF_A SIGMF_C ...
        INDEX_MATCH_RATIO INDEX_DISSIM_SCORE INDEX_I_CURRENT; 
      
@@ -128,7 +128,6 @@ if(size(coherency_window,2) >= coherency_window_lenght)
                               TAU_D * visible_duration * ...
                                       mean_segment_area ;
       end
-      %test_data = [test_data;visible_duration weight_cost(mean_segment_area) positional_variance];
     end
     
     %appeared node
@@ -152,9 +151,12 @@ if(size(coherency_window,2) >= coherency_window_lenght)
   new_frame = {N2;E2;S2;P;C;match_ratio;dissimilarity_score;I_current};
   coherency_window = [coherency_window(:,2:coherency_window_lenght) new_frame];
 
+% WEIGHT SCORE WITH WINDOW COHERENCY SCORE
 %   coherency_scores(1,cursor) = sum(cell2mat(coherency_window(INDEX_DISSIM_SCORE,:)))*...
 %                                (1-sigmf(window_coherency_score,[SIGMF_A,SIGMF_C])) / ...
 %                                coherency_window_lenght;
+
+% DONT WEIGHT
    coherency_scores(1,cursor) = sum(cell2mat(coherency_window(INDEX_DISSIM_SCORE,:))) / ...
                                 coherency_window_lenght;
 else
