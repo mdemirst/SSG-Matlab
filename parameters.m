@@ -18,7 +18,7 @@ global working_dir exec_dir segmentation_app_filename ...
 
 PAR_SIGMA = '0.7';
 PAR_K = '150';
-PAR_MIN_SIZE = '1000';
+PAR_MIN_SIZE = '300';
 
 exec_dir = '/home/isl-mahmut-ubuntu/Code/GraphSegmentation/Release/';
 working_dir = '/media/isl-mahmut-ubuntu/YEDEK/REPO/SegmentsSummaryGraphs/';
@@ -27,11 +27,11 @@ TEST_FOLDER = '';
 GT_PLACES_FILE = '';
 
 BIG_NUMBER = 9999;
-
-%DATASET_NO = 1;
-%FIRST_FRAME = 20;LAST_FRAME = 40; %1
-%FILE_HEADER = 'CamVid-';
-%FILE_SUFFIX = '.ppm';
+% 
+% DATASET_NO = 1;
+% FIRST_FRAME = 20;LAST_FRAME = 40; %1
+% FILE_HEADER = 'CamVid-';
+% FILE_SUFFIX = '.ppm';
 
 % DATASET_NO = 2;
 % FIRST_FRAME = 100;LAST_FRAME = 120; %2
@@ -83,11 +83,11 @@ BIG_NUMBER = 9999;
 % FILE_HEADER = 'NewCollege-';
 % FILE_SUFFIX = '.jpg';
 
-% DATASET_NO = 13;
-% FIRST_FRAME = 200;LAST_FRAME = 500; %13
-% FILE_HEADER = 'Cold-';
-% FILE_SUFFIX = '.jpg';
-% GT_PLACES_FILE = 'places.lst';
+DATASET_NO = 13;
+FIRST_FRAME = 340;LAST_FRAME = 360; %13
+FILE_HEADER = 'Cold-';
+FILE_SUFFIX = '.jpg';
+GT_PLACES_FILE = 'places.lst';
 
 % DATASET_NO = 14;
 % FIRST_FRAME = 1030;LAST_FRAME = 1060; %14
@@ -95,12 +95,12 @@ BIG_NUMBER = 9999;
 % FILE_SUFFIX = '.jpg';
 % GT_PLACES_FILE = 'places.lst';
 
-DATASET_NO = 16;
-FIRST_FRAME = 400;LAST_FRAME = 430; %16
-FILE_HEADER = 'Cold-';
-FILE_SUFFIX = '.jpg';
-TEST_FOLDER = 'TestImages';
-GT_PLACES_FILE = 'places.lst';
+% DATASET_NO = 16;
+% FIRST_FRAME = 700;LAST_FRAME = 900; %16
+% FILE_HEADER = 'Cold-';
+% FILE_SUFFIX = '.jpg';
+% TEST_FOLDER = 'TestImages';
+% GT_PLACES_FILE = 'places.lst';
 
 % DATASET_NO = 17;
 % FIRST_FRAME = 1;LAST_FRAME = 1632; %14
@@ -108,7 +108,7 @@ GT_PLACES_FILE = 'places.lst';
 % FILE_SUFFIX = '.jpg';
 %GT_PLACES_FILE = 'places.lst';
 
-SCALE_DOWN_RATIO = 0.5;
+SCALE_DOWN_RATIO = 0.25;
 
 position_weight = 0.8;
 color_weight = 0.5;
@@ -119,7 +119,7 @@ use_edge_permutation = 0;
 
 missing_node_penalty = 0;
 
-draw_cf_node_radius = 2*500/300000;
+draw_cf_node_radius = 4*500/300000;
 draw_cf_match_line_width_a = 1.3;
 draw_cf_match_line_width_b = 5;
 tau_m = 0.02;  %cost_thres - node-to-node match threshold in order to be
@@ -130,7 +130,7 @@ draw_match_lines = 0;
 save_drawn_matches = 0;
 draw_indv_node_match_cost = 0;
 
-coherency_window_lenght = 7;
+coherency_window_lenght = 11;
 
 unique_nodes_count = 0;
 
@@ -152,4 +152,4 @@ INDEX_I_CURRENT = 8;
 
 NODE_PERCENT_THRES = 0.2;
 
-DO_PERF_MEASUREMENT = 1;
+DO_PERF_MEASUREMENT = 0;

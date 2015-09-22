@@ -22,11 +22,13 @@ coherency_window = cell(7,coherency_window_lenght);
 coherency_scores = [];
 places = [];
 nodes_all_frames = cell(1,LAST_FRAME-FIRST_FRAME);
+edges_all_frames = cell(1,LAST_FRAME-FIRST_FRAME);
 inter_matches_all_frames = cell(1,LAST_FRAME-FIRST_FRAME);
 unique_nodes = [];
 match_ratios = [];
 summary_graphs = [];
 recognized_places = [];
+
 
 args1 = strcat({' '},PAR_SIGMA,{' '},PAR_K,{' '},PAR_MIN_SIZE,{' '},...
                'Datasets/',num2str(DATASET_NO),...
@@ -83,6 +85,7 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     
     %draw two segmented region adjacency graph and node-to-node matches
     drawMatches(frame_id,coherency_window,N1,E1,N2,E2,P,C);
+    copyfile('segment2.jpg',strcat(['Output/',num2str(frame_id-FIRST_FRAME+1),'.jpg']));
     movefile('segment2.jpg','segment1.jpg');
     
     places = detectPlace(coherency_scores,places);
@@ -93,7 +96,8 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     summary_graphs = updateSummaryGraph(places, coherency_window, summary_graphs);
     
     nodes_all_frames{frame_id-FIRST_FRAME+1} = N2;
-    inter_matches_all_frames{frame_id-FIRST_FRAME+1} = I_current;
+    edges_all_frames{frame_id-FIRST_FRAME+1} = E2;
+    inter_matches_all_frames{frame_id-FIRST_FRAME+2} = I_current;
     match_ratios(1,frame_id-FIRST_FRAME+1) = match_ratio;
 end
 
@@ -104,6 +108,9 @@ if(DO_PERF_MEASUREMENT && ~isempty(TEST_FOLDER))
   recognized_places = performanceMeasurement(summary_graphs, places);
 end
 
+createSSGDescriptors(places,inter_matches_all_frames);
+
+return;
 save(strcat('Results/coherency_window_',num2str(DATASET_NO),'_',...
      num2str(FIRST_FRAME),'_',num2str(LAST_FRAME),'.mat'),'coherency_window');
 save(strcat('Results/places_',num2str(DATASET_NO),'_',...
@@ -113,7 +120,7 @@ save(strcat('Results/recognized_places_',num2str(DATASET_NO),'_',...
 
 % Plot all results
 disp('Plotting Results');
-plotResults(continuity_map, coherency_scores, places, nodes_all_frames, ...
+plotResults(continuity_map, coherency_scores, places, nodes_all_frames, edges_all_frames, ...
             inter_matches_all_frames, match_ratios, summary_graphs, ...
             recognized_places);
           
