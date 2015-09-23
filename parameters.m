@@ -18,7 +18,7 @@ global working_dir exec_dir segmentation_app_filename ...
 
 PAR_SIGMA = '0.7';
 PAR_K = '150';
-PAR_MIN_SIZE = '300';
+PAR_MIN_SIZE = '500';
 
 exec_dir = '/home/isl-mahmut-ubuntu/Code/GraphSegmentation/Release/';
 working_dir = '/media/isl-mahmut-ubuntu/YEDEK/REPO/SegmentsSummaryGraphs/';
@@ -78,16 +78,16 @@ BIG_NUMBER = 9999;
 %FILE_HEADER = 'CamVid-';
 %FILE_SUFFIX = '.ppm';
 
-% DATASET_NO = 12;
-% FIRST_FRAME = 300;LAST_FRAME = 400; %12
-% FILE_HEADER = 'NewCollege-';
-% FILE_SUFFIX = '.jpg';
-
-DATASET_NO = 13;
-FIRST_FRAME = 340;LAST_FRAME = 360; %13
-FILE_HEADER = 'Cold-';
+DATASET_NO = 12;
+FIRST_FRAME = 300;LAST_FRAME = 350; %12
+FILE_HEADER = 'NewCollege-';
 FILE_SUFFIX = '.jpg';
-GT_PLACES_FILE = 'places.lst';
+
+% DATASET_NO = 13;
+% FIRST_FRAME = 315;LAST_FRAME = 360; %13
+% FILE_HEADER = 'Cold-';
+% FILE_SUFFIX = '.jpg';
+% GT_PLACES_FILE = 'places.lst';
 
 % DATASET_NO = 14;
 % FIRST_FRAME = 1030;LAST_FRAME = 1060; %14
@@ -122,7 +122,7 @@ missing_node_penalty = 0;
 draw_cf_node_radius = 4*500/300000;
 draw_cf_match_line_width_a = 1.3;
 draw_cf_match_line_width_b = 5;
-tau_m = 0.02;  %cost_thres - node-to-node match threshold in order to be
+tau_m = 0.001;  %cost_thres - node-to-node match threshold in order to be
                %regarded as good match
 
 draw_matches = 0;

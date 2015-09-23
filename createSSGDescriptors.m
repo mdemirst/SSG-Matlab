@@ -28,7 +28,7 @@ for place_id = 1:max(places)
         node_existence(i,j) = -1;
       end
     end
-    if(size(find(node_existence(i,:)==-1),2) > size(I_place,2)*0.5)
+    if(size(find(node_existence(i,:)==-1),2) > size(I_place,2)*0.75)
       node_existence(i,:) = -1;
     end
   end
