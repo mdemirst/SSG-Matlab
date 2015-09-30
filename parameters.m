@@ -18,7 +18,7 @@ global working_dir exec_dir segmentation_app_filename ...
 
 PAR_SIGMA = '0.7';
 PAR_K = '150';
-PAR_MIN_SIZE = '1000';
+PAR_MIN_SIZE = '2000';
 
 exec_dir = '/home/isl-mahmut-ubuntu/Code/GraphSegmentation/Release/';
 working_dir = '/media/isl-mahmut-ubuntu/YEDEK/REPO/SegmentsSummaryGraphs/';
@@ -95,12 +95,12 @@ BIG_NUMBER = 9999;
 % FILE_SUFFIX = '.jpg';
 % GT_PLACES_FILE = 'places.lst';
 
-DATASET_NO = 16;
-FIRST_FRAME = 400;LAST_FRAME = 430; %16
-FILE_HEADER = 'Cold-';
-FILE_SUFFIX = '.jpg';
-TEST_FOLDER = 'TestImages';
-GT_PLACES_FILE = 'places.lst';
+% DATASET_NO = 16;
+% FIRST_FRAME = 400;LAST_FRAME = 430; %16
+% FILE_HEADER = 'Cold-';
+% FILE_SUFFIX = '.jpg';
+% TEST_FOLDER = 'TestImages';
+% GT_PLACES_FILE = 'places.lst';
 
 % DATASET_NO = 17;
 % FIRST_FRAME = 1;LAST_FRAME = 1632; %14
@@ -108,7 +108,43 @@ GT_PLACES_FILE = 'places.lst';
 % FILE_SUFFIX = '.jpg';
 %GT_PLACES_FILE = 'places.lst';
 
-SCALE_DOWN_RATIO = 0.5;
+
+% DATASET_NO = 21;
+% FIRST_FRAME = 1;LAST_FRAME = 549; %14
+% FILE_HEADER = 'image-';
+% FILE_SUFFIX = '.jpg';
+
+% DATASET_NO = 22;
+% FIRST_FRAME = 1;LAST_FRAME = 355; %14
+% FILE_HEADER = 'image-';
+% FILE_SUFFIX = '.jpg';
+
+% DATASET_NO = 23;
+% FIRST_FRAME = 1;LAST_FRAME = 295; %14
+% FILE_HEADER = 'image-';
+% FILE_SUFFIX = '.jpg';
+
+% DATASET_NO = 24;
+% FIRST_FRAME = 1;LAST_FRAME = 304; %14
+% FILE_HEADER = 'image-';
+% FILE_SUFFIX = '.jpg';
+
+DATASET_NO = 25;
+FIRST_FRAME = 1;LAST_FRAME = 100; %14
+FILE_HEADER = 'image-';
+FILE_SUFFIX = '.jpg';
+
+% DATASET_NO = 26;
+% FIRST_FRAME = 1;LAST_FRAME = 100; %14
+% FILE_HEADER = 'image-';
+% FILE_SUFFIX = '.jpg';
+% 
+% DATASET_NO = 32;
+% FIRST_FRAME = 5;LAST_FRAME = 448; %14
+% FILE_HEADER = 'image-';
+% FILE_SUFFIX = '.jpg';
+
+SCALE_DOWN_RATIO = 1;
 
 position_weight = 0.8;
 color_weight = 0.5;
@@ -122,7 +158,7 @@ missing_node_penalty = 0;
 draw_cf_node_radius = 2*500/300000;
 draw_cf_match_line_width_a = 1.3;
 draw_cf_match_line_width_b = 5;
-tau_m = 0.02;  %cost_thres - node-to-node match threshold in order to be
+tau_m = 0.05;  %cost_thres - node-to-node match threshold in order to be
                %regarded as good match
 
 draw_matches = 0;
@@ -134,9 +170,13 @@ coherency_window_lenght = 7;
 
 unique_nodes_count = 0;
 
-tau_n = 6;
-tau_c = 1.2;
-COHERENCY_SCORE = 7;
+% tau_n = 4;
+% tau_c = 1.6; %lower is the higher transition places
+% COHERENCY_SCORE = 7;
+
+tau_n = 3;
+tau_c = 1.6; %lower is the higher transition places
+COHERENCY_SCORE = 5;
 
 TAU_D = 1;
 TAU_A = 1;

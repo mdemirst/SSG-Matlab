@@ -55,11 +55,11 @@ for i = 1:size(N,1)
     colorG = N{i,2}(2)/255;
     colorB = N{i,2}(3)/255;
 
-    rectangle('Position', [N{i,1}-[node_radius/2.0, node_radius/2.0],node_radius,node_radius],...
-              'Curvature', [1,1],...
-              'FaceColor', [colorR,colorG,colorB]);
-    text('color',[1,1,1],'position',[N{i,1}(1) N{i,1}(2)],'fontsize',15,'string',num2str(coherency_window{end,end-1}(i)));
-        
+%     rectangle('Position', [N{i,1}-[node_radius/2.0, node_radius/2.0],node_radius,node_radius],...
+%               'Curvature', [1,1],...
+%               'FaceColor', [colorR,colorG,colorB]);
+%     text('color',[1,1,1],'position',[N{i,1}(1) N{i,1}(2)],'fontsize',15,'string',num2str(coherency_window{end,end-1}(i)));
+%         
     hold on;
 end
 

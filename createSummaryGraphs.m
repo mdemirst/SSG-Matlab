@@ -17,6 +17,8 @@ parameters(); %load parameters
 
 global img_height img_width img_dim img_area;
 
+tic;
+
 continuity_map = [];
 coherency_window = cell(7,coherency_window_lenght);
 coherency_scores = [];
@@ -38,7 +40,9 @@ sample_image = imread('segment1.jpg');
 [img_height, img_width, img_dim] = size(sample_image);
 img_area = img_height*img_width;
 
-
+elapsed_seg = [0,0];
+elapsed_match = [0,0];
+elapsed_coh = [0,0];
 for frame_id = FIRST_FRAME:LAST_FRAME-1
   
     disp(['Processing ', num2str(frame_id-FIRST_FRAME+1), '. frame']);
@@ -55,7 +59,11 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     %run segmentation algorithm implemented on cpp
     %cpp file produces segment1_graph.txt and segment2_graph.txt
     %on the local directory
+    tic;
     [status,cmdout ] = system([exec_dir segmentation_app_filename args2{1}]);
+    elapsed = toc;
+    elapsed_seg = [(elapsed_seg(1)*elapsed_seg(2)+elapsed)/(elapsed_seg(2)+1),...
+                   (elapsed_seg(2)+1)];
     
     %reads produced txt files and creates node signatures
     [N1, E1, S1] = readGraphFromFile([working_dir 'segment1_graph.txt']);
@@ -66,10 +74,14 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     %calculates cost adjacency matrix and find permutation matrix P
     %that defines an optimal match between two graphs
     %P: Permutation matrix, C: Adjacency cost matrix
+    tic;
     [P,C,match_ratio] = findOptimalMatch(N1,E1,N2,E2,S1,S2);
-    
+    elapsed = toc;
+    elapsed_match = [(elapsed_match(1)*elapsed_match(2)+elapsed)/(elapsed_match(2)+1),...
+                     (elapsed_match(2)+1)];
     
     %fills - fixed size queue struct - coherency window 
+    tic;
     [coherency_window, ...
      continuity_map, ...
      coherency_scores, ...
@@ -80,6 +92,9 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
                                              continuity_map,...
                                              coherency_scores,...
                                              unique_nodes);
+     elapsed = toc;
+     elapsed_coh = [(elapsed_coh(1)*elapsed_coh(2)+elapsed)/(elapsed_coh(2)+1),...
+                    (elapsed_coh(2)+1)];
     
     %draw two segmented region adjacency graph and node-to-node matches
     drawMatches(frame_id,coherency_window,N1,E1,N2,E2,P,C);
@@ -96,6 +111,13 @@ for frame_id = FIRST_FRAME:LAST_FRAME-1
     inter_matches_all_frames{frame_id-FIRST_FRAME+1} = I_current;
     match_ratios(1,frame_id-FIRST_FRAME+1) = match_ratio;
 end
+
+elapsed_time = toc;
+
+disp(['Elapsed segmentation time: ', num2str(elapsed_seg)]);
+disp(['Elapsed matching time: ', num2str(elapsed_match)]);
+disp(['Elapsed coherency time: ', num2str(elapsed_coh)]);
+disp(['Frames per second: ', num2str((LAST_FRAME-FIRST_FRAME)/elapsed_time)]);
 
 % Perform performance measurement. Only valid if there is test images
 % folder inside the dataset folder

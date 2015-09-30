@@ -6,6 +6,42 @@ global FIRST_FRAME LAST_FRAME DATASET_NO draw_cf_node_radius FILE_HEADER FILE_SU
   NODE_PERCENT_THRES DO_PERF_MEASUREMENT SCALE_DOWN_RATIO TEST_FOLDER ...
   GT_PLACES_FILE;
 
+%clear results file
+mkdir(strcat('Results/',num2str(DATASET_NO)));
+delete(strcat('Results/',num2str(DATASET_NO),'/*.*'));
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% SAVE SSGS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+min_place_nr = min(places(places ~= 0 & places ~= -1));
+max_place_nr = max(places);
+
+
+for place_nr = min_place_nr:max_place_nr
+  fig_ssg = figure();
+  set(fig_ssg, 'Visible', 'off');
+  
+  for i = 1:size(summary_graphs,1)
+    avg_node = summary_graphs{i,place_nr};
+
+    place_length = size(find(places == place_nr),2);
+    
+    if(~isempty(avg_node) && avg_node{1,1} > NODE_PERCENT_THRES*place_length)
+      node_radius = avg_node{1,3}(4)*draw_cf_node_radius;
+      colorR = avg_node{1,3}(3)/255;
+      colorG = avg_node{1,3}(2)/255;
+      colorB = avg_node{1,3}(1)/255;
+
+      rectangle('Position', [avg_node{1,2}-[node_radius/2.0, node_radius/2.0],node_radius,node_radius],...
+                'Curvature', [1,1],...
+                'FaceColor', [colorR,colorG,colorB]);
+      hold on;
+    end
+  end
+  print(fig_ssg,strcat('Results/',num2str(DATASET_NO),'/ssg-',num2str(place_nr)),'-depsc');
+end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% PLOT RECOGNIZED PLACES AND GROUND TRUTH PLACES %%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -72,13 +108,14 @@ end
 fig = figure('units','normalized','outerposition',[0 0 1 1]);
 
 %draw black-white continuity map
-subplot(4,1,1);
-ylabel('Node #');
-xlabel('Base points');
+fig_coh_map = subplot(4,1,1);
+
 
 imagesc(continuity_map);
 colormap([1 1 1; 0 0 0]);
-title('Continuity Map');
+title('Coherency Map');
+ylabel('Node #');
+xlabel('Frames');
 axis xy;
 hold on;
 
@@ -86,22 +123,48 @@ dcm_obj = datacursormode(fig);
 datacursormode on;
 
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% PLOT COHERENCY SCORES AND DETECTED PLACES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-subplot(4,1,2);
-ylabel('Place #');
-xlabel('Base Points');
+fig_coherency = subplot(4,1,2);
+ylabel('Incoherency');
+xlabel('Frames');
 
 plot_height = size(continuity_map,1);
 
-coherency_scores_normalized = normalize_var(coherency_scores,0,plot_height);
+for i = min(places(places>0)):max(places)
+  place_i1_start = find(places == i,1,'first');
+  place_i1_end   = find(places == i,1,'last');
+  
+  if(i < max(places))
+    place_i2_start = find(places == i+1,1,'first');
+    place_i2_end   = find(places == i+1,1,'last');
+
+    %places
+    p=patch([place_i1_start place_i1_end place_i1_end place_i1_start],[0 0 1 1],'r');
+    hold on;
+
+    %transitions
+    p=patch([place_i1_end place_i2_start place_i2_start place_i1_end],[0 0 1 1],'b');
+    hold on;
+  else
+    %places
+    p=patch([place_i1_start place_i1_end place_i1_end place_i1_start],[0 0 1 1],'r');
+    hold on;
+  end
+  
+end
+
+coherency_scores_normalized = normalize_var(coherency_scores,0,1);
 plot(coherency_scores_normalized,'color','g','LineWidth',2);
 hold on;
 
+extractBestKeyframes(places, coherency_scores_normalized);
+
 %plot detected places
-stairs(places(2:end),'color','r','LineWidth',1);
-xlim([0,LAST_FRAME-FIRST_FRAME]);
+%stairs(places(2:end),'color','r','LineWidth',1);
+xlim([1,LAST_FRAME-FIRST_FRAME]);
 hold on;
 
 %plot performance results
@@ -124,8 +187,11 @@ end
 
 %plot consecutive frames match ratios
 match_ratios = normalize_var(match_ratios,0,plot_height);
-plot(match_ratios,'color','b','LineWidth',2);
-title('Coherency scores and detected places');
+%plot(match_ratios,'color','b','LineWidth',2);
+title('Incoherency scores and selected keyframes based on coherent regions');
+
+
+print(fig,strcat('Results/',num2str(DATASET_NO),'/result'),'-depsc');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% PLOT ASSOCIATED PLACE AND SSG WHEN CLICKED %%%%%%%%%%%%%%%%%%%%%%%%%%%%
